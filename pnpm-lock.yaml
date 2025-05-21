@@ -15,6 +15,9 @@ importers:
       '@types/three':
         specifier: ^0.176.0
         version: 0.176.0
+      gsap:
+        specifier: ^3.13.0
+        version: 3.13.0
       prettier:
         specifier: 3.5.3
         version: 3.5.3
@@ -319,6 +322,9 @@ packages:
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
     os: [darwin]
 
+  gsap@3.13.0:
+    resolution: {integrity: sha512-QL7MJ2WMjm1PHWsoFrAQH/J8wUeqZvMtHO58qdekHpCfhvhSL4gSiz6vJf5EeMP0LOn3ZCprL2ki/gjED8ghVw==}
+
   meshoptimizer@0.18.1:
     resolution: {integrity: sha512-ZhoIoL7TNV4s5B6+rx5mC//fw8/POGyNxS/DZyCJeiZ12ScLfVwRE/GfsxwiTkMYYD5DmK2/JXnEVXqL4rF+Sw==}
 
@@ -599,6 +605,8 @@ snapshots:
 
   fsevents@2.3.3:
     optional: true
+
+  gsap@3.13.0: {}
 
   meshoptimizer@0.18.1: {}
 
