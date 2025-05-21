@@ -47,11 +47,11 @@ gsap.to(cube.position, {
     x: 2,
 })
 
-const clock = new Clock();
+// const clock = new Clock();
 
 // NOTE: just started "Using a Library" section of video at end of lunch
 function animate() {
-    const elapsedTime = clock.getElapsedTime();
+    // const elapsedTime = clock.getElapsedTime();
     // cube.position.y = Math.sin(elapsedTime)
     // camera.position.x = Math.sin(elapsedTime) * 5;
     camera.lookAt(cube.position);
