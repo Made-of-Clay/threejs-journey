@@ -8,6 +8,12 @@ importers:
 
   .:
     dependencies:
+      gsap:
+        specifier: ^3.13.0
+        version: 3.13.0
+      lil-gui:
+        specifier: ^0.20.0
+        version: 0.20.0
       three:
         specifier: ^0.176.0
         version: 0.176.0
@@ -15,9 +21,6 @@ importers:
       '@types/three':
         specifier: ^0.176.0
         version: 0.176.0
-      gsap:
-        specifier: ^3.13.0
-        version: 3.13.0
       prettier:
         specifier: 3.5.3
         version: 3.5.3
@@ -325,6 +328,9 @@ packages:
   gsap@3.13.0:
     resolution: {integrity: sha512-QL7MJ2WMjm1PHWsoFrAQH/J8wUeqZvMtHO58qdekHpCfhvhSL4gSiz6vJf5EeMP0LOn3ZCprL2ki/gjED8ghVw==}
 
+  lil-gui@0.20.0:
+    resolution: {integrity: sha512-k7Ipr0ztqslMA2XvM5z5ZaWhxQtnEOwJBfI/hmSuRh6q4iMG9L0boqqrnZSzBR1jzyJ28OMl47l65ILzRe1TdA==}
+
   meshoptimizer@0.18.1:
     resolution: {integrity: sha512-ZhoIoL7TNV4s5B6+rx5mC//fw8/POGyNxS/DZyCJeiZ12ScLfVwRE/GfsxwiTkMYYD5DmK2/JXnEVXqL4rF+Sw==}
 
@@ -607,6 +613,8 @@ snapshots:
     optional: true
 
   gsap@3.13.0: {}
+
+  lil-gui@0.20.0: {}
 
   meshoptimizer@0.18.1: {}
 
