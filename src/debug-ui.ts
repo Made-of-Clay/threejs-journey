@@ -1,6 +1,6 @@
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
 import './style.css';
-import { AmbientLight, AxesHelper, BoxGeometry, BufferAttribute, BufferGeometry, Clock, Mesh, MeshBasicMaterial, OrthographicCamera, PerspectiveCamera, Scene, WebGLRenderer } from 'three';
+import { AmbientLight, BoxGeometry, Mesh, MeshBasicMaterial, PerspectiveCamera, Scene, WebGLRenderer } from 'three';
 import GUI from 'lil-gui';
 import { gsap } from 'gsap';
 
@@ -22,10 +22,6 @@ camera.position.z = 5;
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.dampingFactor = 0.1;
 controls.enableDamping = true;
-
-// HELPER
-// const axesHelper = new AxesHelper(5);
-// scene.add(axesHelper);
 
 // SHAPE
 debugObject.color = '#6495ed';
