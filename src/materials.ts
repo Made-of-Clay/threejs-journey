@@ -1,8 +1,13 @@
-import { MeshBasicMaterial, Mesh, SphereGeometry, PlaneGeometry, TorusGeometry, AmbientLight, PerspectiveCamera, Scene, WebGLRenderer, Clock, TextureLoader, SRGBColorSpace, Color, DoubleSide, MeshNormalMaterial } from 'three'
+import { MeshBasicMaterial, Mesh, SphereGeometry, PlaneGeometry, TorusGeometry, AmbientLight, PerspectiveCamera, Scene, WebGLRenderer, Clock, TextureLoader, SRGBColorSpace, Color, DoubleSide, MeshNormalMaterial, MeshMatcapMaterial, LoadingManager, MeshLambertMaterial, PointLight, MeshPhongMaterial, MeshToonMaterial, MeshStandardMaterial, EquirectangularReflectionMapping } from 'three'
 import './style.css';
-import { OrbitControls } from 'three/examples/jsm/Addons.js';
+import GUI from 'lil-gui';
+import { OrbitControls, RGBELoader } from 'three/examples/jsm/Addons.js';
 
 const scene = new Scene();
+
+// DEBUG
+const gui = new GUI();
+const debugObject: Record<string, any> = {};
 
 // CAMERA
 const camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -21,10 +26,28 @@ controls.enableDamping = true;
 const color = 0xFFFFFF;
 const intensity = 1;
 const light = new AmbientLight(color, intensity);
-scene.add(light);
+
+const pointLight = new PointLight(0xffffff, 30);
+pointLight.position.set(5, 5, 5);
+
+scene.add(light, pointLight);
+
+// Environment Map
+const rgbeLoader = new RGBELoader();
+rgbeLoader.load('/forest-env-map.hdr', envMap => {
+    envMap.mapping = EquirectangularReflectionMapping;
+    scene.background = envMap;
+    scene.environment = envMap;
+    console.log(envMap);
+});
 
 // TEXTURES
-const textureLoader = new TextureLoader(); // can load multiple textures
+const loadingManager = new LoadingManager(
+    () => console.log('loading complete'),
+    undefined,
+    (url: string) => console.log('loading error for', url),
+);
+const textureLoader = new TextureLoader(loadingManager); // can load multiple textures
 const alphaTexture = textureLoader.load('/door.alpha.jpg');
 const ambientTexture = textureLoader.load('/door.ambient.jpg');
 const colorTexture = textureLoader.load('/door.color.jpg');
@@ -32,7 +55,7 @@ const heightTexture = textureLoader.load('/door.height.jpg');
 const metalnessTexture = textureLoader.load('/door.metalness.jpg');
 const normalTexture = textureLoader.load('/door.normal.jpg');
 const roughnessTexture = textureLoader.load('/door.roughness.jpg');
-const matcapTexture = textureLoader.load('/mapcap-brown.png');
+const matcapTexture = textureLoader.load('/matcap-brown.png');
 
 colorTexture.colorSpace = SRGBColorSpace;
 matcapTexture.colorSpace = SRGBColorSpace;
@@ -45,8 +68,25 @@ matcapTexture.colorSpace = SRGBColorSpace;
 // material.wireframe = true;
 // material.transparent = true;
 // material.alphaMap = alphaTexture;
-const material = new MeshNormalMaterial();
-material.side = DoubleSide;
+// const material = new MeshNormalMaterial();
+// material.side = DoubleSide;
+// const material = new MeshMatcapMaterial();
+// material.matcap = matcapTexture;
+// const material = new MeshLambertMaterial()
+// const material = new MeshPhongMaterial()
+// material.shininess = 100;
+// material.specular = new Color('#18f');
+// const material = new MeshToonMaterial()
+// material.gradientMap = gradientTe
+const material = new MeshStandardMaterial();
+material.metalness = 0.7;
+material.roughness = 0.2;
+
+material.map = colorTexture;
+material.aoMap = ambientTexture;
+
+gui.add(material, 'metalness').min(0).max(1).step(0.001);
+gui.add(material, 'roughness').min(0).max(1).step(0.001);
 
 const sphere = new Mesh(
     new SphereGeometry(0.5, 16, 16),
