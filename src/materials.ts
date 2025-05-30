@@ -83,14 +83,14 @@ const material = new MeshPhysicalMaterial();
 material.side = DoubleSide;
 material.metalness = 1;
 material.roughness = 1;
-// material.map = colorTexture;
-// material.aoMap = ambientTexture;
-// material.aoMapIntensity = 1;
-// material.displacementMap = heightTexture;
-// material.displacementScale = 0.02;
-// material.metalnessMap = metalnessTexture;
-// material.roughnessMap = roughnessTexture;
-// material.normalMap = normalTexture;
+material.map = colorTexture;
+material.aoMap = ambientTexture;
+material.aoMapIntensity = 1;
+material.displacementMap = heightTexture;
+material.displacementScale = 0.02;
+material.metalnessMap = metalnessTexture;
+material.roughnessMap = roughnessTexture;
+material.normalMap = normalTexture;
 // material.transparent = true;
 // material.alphaMap = alphaTexture;
 
@@ -147,12 +147,12 @@ function animate() {
     const elapsedTime = clock.getElapsedTime();
 
     // sphere.rotation.y = 0.1 * elapsedTime;
-    plane.rotation.y = 0.1 * elapsedTime;
-    torus.rotation.y = 0.1 * elapsedTime;
+    // plane.rotation.y = 0.1 * elapsedTime;
+    // torus.rotation.y = 0.1 * elapsedTime;
 
     // sphere.rotation.x = 0.15 * elapsedTime;
-    plane.rotation.x = 0.15 * elapsedTime;
-    torus.rotation.x = 0.15 * elapsedTime;
+    // plane.rotation.x = 0.15 * elapsedTime;
+    // torus.rotation.x = 0.15 * elapsedTime;
 
     controls.update();
 
