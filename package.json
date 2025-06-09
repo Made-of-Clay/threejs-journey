@@ -6,12 +6,14 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "convert": "node convert-image.js"
   },
   "devDependencies": {
     "@types/three": "^0.176.0",
     "prettier": "3.5.3",
     "typescript": "~5.8.3",
+    "sharp": "^0.34.2",
     "vite": "^6.3.5"
   },
   "dependencies": {
