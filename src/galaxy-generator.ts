@@ -1,4 +1,4 @@
-import { AmbientLight, PerspectiveCamera, Scene, WebGLRenderer, TextureLoader, LoadingManager, SphereGeometry, PointsMaterial, Points, BufferGeometry, BufferAttribute, GridHelper, BoxGeometry, MeshBasicMaterial, Mesh, AdditiveBlending } from 'three';
+import { AmbientLight, PerspectiveCamera, Scene, WebGLRenderer, TextureLoader, LoadingManager, SphereGeometry, PointsMaterial, Points, BufferGeometry, BufferAttribute, GridHelper, BoxGeometry, MeshBasicMaterial, Mesh, AdditiveBlending, Color } from 'three';
 
 import './style.css';
 import GUI from 'lil-gui';
@@ -48,6 +48,8 @@ params.branches = 3;
 params.spin = 1;
 params.randomness = 0.2;
 params.randomnessPower = 3;
+params.insideColor = '#ff0000';
+params.outsideColor = '#ffaa00';
 
 gui.add(params, 'count').min(100).max(100000).step(100).onFinishChange(generateGalaxy);
 gui.add(params, 'size').min(0.01).max(0.1).step(0.001).onFinishChange(generateGalaxy);
@@ -55,6 +57,8 @@ gui.add(params, 'radius').min(0.01).max(20).step(0.01).onFinishChange(generateGa
 gui.add(params, 'spin').min(-5).max(5).step(0.01).onFinishChange(generateGalaxy);
 gui.add(params, 'randomness').min(0).max(2).step(0.001).onFinishChange(generateGalaxy);
 gui.add(params, 'randomnessPower').min(1).max(10).step(0.001).onFinishChange(generateGalaxy);
+gui.addColor(params, 'insideColor').onFinishChange(generateGalaxy);
+gui.addColor(params, 'outsideColor').onFinishChange(generateGalaxy);
 
 let geometry: BufferGeometry | null = null;
 let material: PointsMaterial | null = null;
@@ -68,7 +72,12 @@ function generateGalaxy() {
     }
 
     geometry = new BufferGeometry();
-    const positions = new Float32Array(params.count * 3);
+
+    const positions = new Float32Array(params.count * 3); // x, y, z
+    const colors = new Float32Array(params.count * 3); // r, g, b
+    const colorInside = new Color(params.insideColor);
+    const colorOutside = new Color(params.outsideColor);
+
     for (let i = 0; i < params.count; i++) {
         const i3 = i * 3;
         const radius = Math.random() * params.radius;
@@ -86,10 +95,22 @@ function generateGalaxy() {
         positions[i3 + 0] = Math.cos(branchAngle + spinAngle) * radius + randomX;
         positions[i3 + 1] = randomY;
         positions[i3 + 2] = Math.sin(branchAngle + spinAngle) * radius + randomZ;
+
+        const mixedColor = colorInside.clone();
+        mixedColor.lerp(colorOutside, radius / params.radius);
+        
+        colors[i3 + 0] = mixedColor.r;
+        colors[i3 + 1] = mixedColor.g;
+        colors[i3 + 2] = mixedColor.b;
     }
     geometry.setAttribute(
         'position',
         new BufferAttribute(positions, 3),
+    );
+
+    geometry.setAttribute(
+        'color',
+        new BufferAttribute(colors, 3),
     );
 
     material = new PointsMaterial({
@@ -97,6 +118,7 @@ function generateGalaxy() {
         sizeAttenuation: true,
         depthWrite: false,
         blending: AdditiveBlending,
+        vertexColors: true,
     });
 
     points = new Points(geometry, material);
