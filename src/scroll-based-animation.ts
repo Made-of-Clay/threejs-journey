@@ -1,9 +1,8 @@
-import { AmbientLight, PerspectiveCamera, Scene, WebGLRenderer, TextureLoader, LoadingManager, GridHelper, Mesh, BoxGeometry, MeshBasicMaterial, TorusGeometry, ConeGeometry, TorusKnotGeometry, MeshToonMaterial, DirectionalLight, NearestFilter, Group, Clock, BufferGeometry, BufferAttribute, PointsMaterial, Points } from 'three';
+import { PerspectiveCamera, Scene, WebGLRenderer, TextureLoader, LoadingManager, GridHelper, Mesh, TorusGeometry, ConeGeometry, TorusKnotGeometry, MeshToonMaterial, DirectionalLight, NearestFilter, Group, Clock, BufferGeometry, BufferAttribute, PointsMaterial, Points } from 'three';
 
 import './style.css';
 import GUI from 'lil-gui';
 import { Timer } from 'three/examples/jsm/Addons.js';
-import { TorusKnot } from 'three/examples/jsm/curves/CurveExtras.js';
 import gsap from 'gsap';
 
 const scene = new Scene();
