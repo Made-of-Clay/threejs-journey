@@ -10,13 +10,15 @@
     "convert": "node convert-image.js"
   },
   "devDependencies": {
+    "@types/cannon": "^0.1.13",
     "@types/three": "^0.176.0",
     "prettier": "3.5.3",
-    "typescript": "~5.8.3",
     "sharp": "^0.34.2",
+    "typescript": "~5.8.3",
     "vite": "^6.3.5"
   },
   "dependencies": {
+    "cannon": "^0.6.2",
     "gsap": "^3.13.0",
     "lil-gui": "^0.20.0",
     "three": "^0.176.0"
