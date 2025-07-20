@@ -3,8 +3,7 @@ import { PerspectiveCamera, Scene, WebGLRenderer, TextureLoader, LoadingManager,
 import './style.css';
 import GUI from 'lil-gui';
 import { Timer } from 'three/examples/jsm/Addons.js';
-import gsap from 'gsap';
-import CANNON from 'cannon';
+import * as CANNON from 'cannon-es';
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
 
 const scene = new Scene();
@@ -46,6 +45,17 @@ gridHelper.visible = false;
 scene.add(gridHelper);
 gui.add(gridHelper, 'visible').name('Show Grid Helper');
 
+// SOUNDS
+const hitSound = new Audio('/sounds/hit.mp3');
+function playHitSound(collision: any) {
+    const impactStrength = collision.contact.getImpactVelocityAlongNormal();
+    if (impactStrength > 1.5) {
+        hitSound.volume = Math.random();
+        hitSound.currentTime = 0;
+        hitSound.play();
+    }
+}
+
 // TEXTURES
 const loadingManager = new LoadingManager(console.log, undefined, console.error);
 const textureLoader = new TextureLoader(loadingManager);
@@ -54,6 +64,8 @@ gradientTexture.magFilter = NearestFilter; // grab nearest instead of interpolat
 
 // PHYSICS
 const world = new CANNON.World();
+world.broadphase = new CANNON.SAPBroadphase(world);
+world.allowSleep =  true;
 world.gravity.set(0, -9.82, 0);
 
 const defaultMaterial = new CANNON.Material('default');
@@ -143,6 +155,7 @@ function createSphere(radius: number, position: any) {
         material: defaultMaterial,
     });
     body.position.copy(position);
+    body.addEventListener('collide', playHitSound);
     world.addBody(body);
 
     objectToUpdate.push({ mesh, body });
@@ -158,7 +171,6 @@ params.createSphere = () => {
     );
 }
 gui.add(params, 'createSphere').name('Create Sphere');
-
 
 const boxGeo = new BoxGeometry(1, 1, 1);
 const boxMat = new MeshStandardMaterial({
@@ -180,6 +192,7 @@ function createBox(width: number, height: number, depth: number, position: any) 
         material: defaultMaterial,
     });
     body.position.copy(position);
+    body.addEventListener('collide', playHitSound);
     world.addBody(body);
 
     objectToUpdate.push({ mesh, body });
@@ -198,6 +211,15 @@ params.createBox = () => {
 }
 gui.add(params, 'createBox').name('Create Box');
 
+params.reset = () => {
+    for (const object of objectToUpdate) {
+        object.body.removeEventListener('collide', playHitSound);
+        world.removeBody(object.body);
+        scene.remove(object.mesh);
+    }
+    objectToUpdate.length = 0;
+};
+gui.add(params, 'reset').name('Reset Scene');
 
 const timer = new Timer();
 const clock = new Clock();

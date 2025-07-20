@@ -8,9 +8,9 @@ importers:
 
   .:
     dependencies:
-      cannon:
-        specifier: ^0.6.2
-        version: 0.6.2
+      cannon-es:
+        specifier: ^0.20.0
+        version: 0.20.0
       gsap:
         specifier: ^3.13.0
         version: 3.13.0
@@ -435,8 +435,8 @@ packages:
   '@webgpu/types@0.1.60':
     resolution: {integrity: sha512-8B/tdfRFKdrnejqmvq95ogp8tf52oZ51p3f4QD5m5Paey/qlX4Rhhy5Y8tgFMi7Ms70HzcMMw3EQjH/jdhTwlA==}
 
-  cannon@0.6.2:
-    resolution: {integrity: sha512-n/7wWSXr8KOSvjad2x0fJHgpMepKjOKi+NdSnjfYyijoDBZnp4JQKgPcpv28jlXoWM+N9zVYU09J0A6Qxx+Y7w==}
+  cannon-es@0.20.0:
+    resolution: {integrity: sha512-eZhWTZIkFOnMAJOgfXJa9+b3kVlvG+FX4mdkpePev/w/rP5V8NRquGyEozcjPfEoXUlb+p7d9SUcmDSn14prOA==}
 
   color-convert@2.0.1:
     resolution: {integrity: sha512-RRECPsj7iu/xb5oKYcsFHSppFNnsj/52OVTRKb4zP5onXwVF3zVmmToNcOfGC+CRDpfK/U584fMg38ZHCaElKQ==}
@@ -833,7 +833,7 @@ snapshots:
 
   '@webgpu/types@0.1.60': {}
 
-  cannon@0.6.2: {}
+  cannon-es@0.20.0: {}
 
   color-convert@2.0.1:
     dependencies:
