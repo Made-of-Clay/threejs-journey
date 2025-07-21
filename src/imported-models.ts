@@ -4,8 +4,23 @@ import './style.css';
 import GUI from 'lil-gui';
 import { Timer } from 'three/examples/jsm/Addons.js';
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
+import { GLTFLoader } from 'three/examples/jsm/Addons.js';
 
 const scene = new Scene();
+
+// Models
+const gltfLoader = new GLTFLoader();
+gltfLoader.load(
+    // '/models/Duck/glTF/Duck.gltf',
+    // '/models/Duck/glTF-Binary/Duck.glb',
+    // '/models/Duck/glTF-Draco/Duck.gltf', // errors - fix later w/ lesson
+    '/models/FlightHelmet/glTF/FlightHelmet.gltf',
+    (gltf) => {
+        scene.add(gltf.scene);
+    },
+    console.log,
+    console.error,
+);
 
 // DEBUG
 const gui = new GUI();
