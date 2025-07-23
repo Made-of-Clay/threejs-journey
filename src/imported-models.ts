@@ -1,21 +1,35 @@
-import { PerspectiveCamera, Scene, WebGLRenderer, TextureLoader, LoadingManager, GridHelper, Mesh, TorusGeometry, ConeGeometry, TorusKnotGeometry, MeshToonMaterial, DirectionalLight, NearestFilter, Group, Clock, BufferGeometry, BufferAttribute, PointsMaterial, Points, SphereGeometry, MeshBasicMaterial, MeshStandardMaterial, AmbientLight, PlaneGeometry, Vector3, BoxGeometry } from 'three';
+import { PerspectiveCamera, Scene, WebGLRenderer, TextureLoader, LoadingManager, GridHelper, Mesh, TorusGeometry, ConeGeometry, TorusKnotGeometry, MeshToonMaterial, DirectionalLight, NearestFilter, Group, Clock, BufferGeometry, BufferAttribute, PointsMaterial, Points, SphereGeometry, MeshBasicMaterial, MeshStandardMaterial, AmbientLight, PlaneGeometry, Vector3, BoxGeometry, AnimationMixer } from 'three';
 
 import './style.css';
 import GUI from 'lil-gui';
 import { Timer } from 'three/examples/jsm/Addons.js';
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
 import { GLTFLoader } from 'three/examples/jsm/Addons.js';
+import { DRACOLoader } from 'three/examples/jsm/Addons.js';
 
 const scene = new Scene();
 
 // Models
+const dracoLoader = new DRACOLoader();
+dracoLoader.setDecoderPath('/draco/'); // Set the path to the Draco decoder
+
+let mixer: AnimationMixer | null = null;
+
 const gltfLoader = new GLTFLoader();
+gltfLoader.setDRACOLoader(dracoLoader);
 gltfLoader.load(
     // '/models/Duck/glTF/Duck.gltf',
     // '/models/Duck/glTF-Binary/Duck.glb',
     // '/models/Duck/glTF-Draco/Duck.gltf', // errors - fix later w/ lesson
-    '/models/FlightHelmet/glTF/FlightHelmet.gltf',
+    // '/models/FlightHelmet/glTF/FlightHelmet.gltf',
+    '/models/Fox/glTF/Fox.gltf',
     (gltf) => {
+        mixer = new AnimationMixer(gltf.scene);
+        const action = mixer.clipAction(gltf.animations[2]);
+        console.log(action);
+        action.play();
+
+        gltf.scene.scale.set(0.025, 0.025, 0.025);
         scene.add(gltf.scene);
     },
     console.log,
@@ -90,6 +104,8 @@ function animate() {
     const elapsedTime = timer.getElapsed();
     const deltaTime = elapsedTime - previousTime;
     previousTime = elapsedTime;
+
+    mixer?.update(deltaTime);
 
     controls.update();
 
