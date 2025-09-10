@@ -1,4 +1,4 @@
-import { PerspectiveCamera, Scene, WebGLRenderer, TextureLoader, LoadingManager, GridHelper, DirectionalLight, Clock, AmbientLight, SphereGeometry, Mesh, MeshBasicMaterial, Raycaster, Vector3, Vector2, Group, type Object3DEventMap, TorusKnotGeometry, CubeTextureLoader, MeshStandardMaterial, EquirectangularReflectionMapping, SRGBColorSpace, TorusGeometry, WebGLCubeRenderTarget, FloatType, HalfFloatType, CubeCamera, Color, ACESFilmicToneMapping, NoToneMapping, LinearToneMapping, ReinhardToneMapping, CineonToneMapping, PCFSoftShadowMap, CameraHelper } from 'three';
+import { PerspectiveCamera, Scene, WebGLRenderer, TextureLoader, LoadingManager, GridHelper, DirectionalLight, Clock, AmbientLight, SphereGeometry, Mesh, MeshBasicMaterial, Raycaster, Vector3, Vector2, Group, type Object3DEventMap, TorusKnotGeometry, CubeTextureLoader, MeshStandardMaterial, EquirectangularReflectionMapping, SRGBColorSpace, TorusGeometry, WebGLCubeRenderTarget, FloatType, HalfFloatType, CubeCamera, Color, ACESFilmicToneMapping, NoToneMapping, LinearToneMapping, ReinhardToneMapping, CineonToneMapping, PCFSoftShadowMap, CameraHelper, Plane, PlaneGeometry } from 'three';
 
 import './style.css';
 import GUI from 'lil-gui';
@@ -37,6 +37,55 @@ gltfLoader.load(
         scene.add(gltf.scene);
         updateAllMaterials();
     }
+);
+
+const floorColorTexture = textureLoader.load('/textures/wood_cabinet_worn_long/wood_cabinet_worn_long_diff_1k.jpg');
+const floorNormalTexture = textureLoader.load('/textures/wood_cabinet_worn_long/wood_cabinet_worn_long_nor_gl_1k.png');
+const floorAORoughnessMetalnessTexture = textureLoader.load('/textures/wood_cabinet_worn_long/wood_cabinet_worn_long_arm_1k.jpg');
+
+floorColorTexture.colorSpace = SRGBColorSpace;
+
+const floor = new Mesh(
+    new PlaneGeometry(8, 8),
+    new MeshStandardMaterial({
+        map: floorColorTexture,
+        normalMap: floorNormalTexture,
+        aoMap: floorAORoughnessMetalnessTexture,
+        roughnessMap: floorAORoughnessMetalnessTexture,
+        metalnessMap: floorAORoughnessMetalnessTexture,
+    }),
+);
+floor.rotation.x = -Math.PI * 0.5;
+scene.add(floor);
+
+const wallColorTexture = textureLoader.load('/textures/castle_brick_broken_06/castle_brick_broken_06_diff_1k.jpg');
+const wallNormalTexture = textureLoader.load('/textures/castle_brick_broken_06/castle_brick_broken_06_nor_gl_1k.png');
+const wallAORoughnessMetalnessTexture = textureLoader.load('/textures/castle_brick_broken_06/castle_brick_broken_06_arm_1k.jpg');
+
+wallColorTexture.colorSpace = SRGBColorSpace;
+
+const wall = new Mesh(
+    new PlaneGeometry(8, 8),
+    new MeshStandardMaterial({
+        map: wallColorTexture,
+        normalMap: wallNormalTexture,
+        aoMap: wallAORoughnessMetalnessTexture,
+        roughnessMap: wallAORoughnessMetalnessTexture,
+        metalnessMap: wallAORoughnessMetalnessTexture,
+    }),
+);
+wall.position.y = 4;
+wall.position.z = -4;
+scene.add(wall);
+
+gltfLoader.load(
+    '/models/hamburger.glb',
+    (gltf) => {
+        gltf.scene.scale.set(0.4, 0.4, 0.4);
+        gltf.scene.position.set(3.5, 0, 0);
+        scene.add(gltf.scene);
+        updateAllMaterials();
+    },
 );
 
 // ENVIRONMENT MAP
@@ -108,15 +157,22 @@ dirLight.target.position.set(0, 4, 0);
 dirLight.target.updateWorldMatrix(false, false);
 dirLight.shadow.camera.far = 15;
 dirLight.shadow.mapSize.set(1024, 1024);
+dirLight.shadow.normalBias = 0.027;
+dirLight.shadow.bias = -0.004;
 scene.add(dirLight);
 
 gui.add(dirLight, 'intensity').min(0).max(10).step(0.001).name('Light Intensity');
 gui.add(dirLight.position, 'x').min(-10).max(10).step(0.001).name('Light X');
 gui.add(dirLight.position, 'y').min(-10).max(10).step(0.001).name('Light Y');
 gui.add(dirLight.position, 'z').min(-10).max(10).step(0.001).name('Light Z');
+gui.add(dirLight.shadow, 'normalBias').min(-0.05).max(0.05).step(0.001);
+gui.add(dirLight.shadow, 'bias').min(-0.05).max(0.05).step(0.001);
 
 const dirLightHelper = new CameraHelper(dirLight.shadow.camera);
+dirLightHelper.visible = false;
 scene.add(dirLightHelper);
+
+gui.add(dirLightHelper, 'visible');
 
 const ambientLight = new AmbientLight('white', 0.25);
 scene.add(ambientLight);
