@@ -56,7 +56,9 @@ window.addEventListener('resize', () => {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 });
 
-// GRID
+params.depthColor = '#186691';
+params.surfaceColor = '#9bd8ff';
+
 const gridHelper = new GridHelper(10, 10, '#aaa', '#aaa');
 gridHelper.visible = false;
 scene.add(gridHelper);
@@ -78,6 +80,10 @@ const waterMat = new ShaderMaterial({
         uBigWavesElevation: { value: 0.2 },
         uBigWavesFrequency: { value: new Vector2(4, 1.5) },
         uBigWavesSpeed: { value: 0.5 },
+        uDepthColor: { value: new Color(params.depthColor) },
+        uSurfaceColor: { value: new Color(params.surfaceColor) },
+        uColorOffset: { value: 0.08 },
+        uColorMultiplier: { value: 5 },
     },
 });
 
@@ -85,6 +91,14 @@ gui.add(waterMat.uniforms.uBigWavesElevation, 'value').min(0).max(1).step(0.001)
 gui.add(waterMat.uniforms.uBigWavesFrequency.value, 'x').min(0).max(10).step(0.001).name('Big Waves Frequency X');
 gui.add(waterMat.uniforms.uBigWavesFrequency.value, 'y').min(0).max(10).step(0.001).name('Big Waves Frequency Y');
 gui.add(waterMat.uniforms.uBigWavesSpeed, 'value').min(0).max(4).step(0.001).name('Big Waves Speed');
+gui.addColor(params, 'depthColor').name('Depth Color').onChange(() => {
+    waterMat.uniforms.uDepthColor.value.set(params.depthColor);
+});
+gui.addColor(params, 'surfaceColor').name('Surface Color').onChange(() => {
+    waterMat.uniforms.uSurfaceColor.value.set(params.surfaceColor);
+});;
+gui.add(waterMat.uniforms.uColorOffset, 'value').min(0).max(1).step(0.001).name('Color Offset');
+gui.add(waterMat.uniforms.uColorMultiplier, 'value').min(0).max(10).step(0.001).name('Color Multiplier');
 
 const water = new Mesh(waterGeo, waterMat);
 water.rotation.x = -Math.PI * 0.5;
