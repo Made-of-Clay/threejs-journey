@@ -9,10 +9,6 @@ import fragmentShader from './shaders/water/fragment.glsl?raw';
 
 const scene = new Scene();
 
-const loadingManager = new LoadingManager(console.log, undefined, console.error);
-const textureLoader = new TextureLoader(loadingManager);
-const flagTexture = textureLoader.load('/textures/flag-french.jpg');
-
 // DEBUG
 const gui = new GUI();
 const params: Record<string, any> = {};
@@ -70,7 +66,7 @@ scene.add(axesHelper);
 gui.add(axesHelper, 'visible').name('Show Axes Helper');
 
 // OBJECTS
-const waterGeo = new PlaneGeometry(2, 2, 128, 128);
+const waterGeo = new PlaneGeometry(20, 20, 128, 128);
 
 const waterMat = new ShaderMaterial({
     vertexShader,
@@ -82,8 +78,12 @@ const waterMat = new ShaderMaterial({
         uBigWavesSpeed: { value: 0.5 },
         uDepthColor: { value: new Color(params.depthColor) },
         uSurfaceColor: { value: new Color(params.surfaceColor) },
-        uColorOffset: { value: 0.08 },
-        uColorMultiplier: { value: 5 },
+        uColorOffset: { value: 0.3 },
+        uColorMultiplier: { value: 2.87 },
+        uSmallWavesElevation: { value: 0.15 },
+        uSmallWavesFrequency: { value: 3.0 },
+        uSmallWavesSpeed: { value: 0.2 },
+        uSmallIterations: { value: 4.0 },
     },
 });
 
@@ -99,6 +99,11 @@ gui.addColor(params, 'surfaceColor').name('Surface Color').onChange(() => {
 });;
 gui.add(waterMat.uniforms.uColorOffset, 'value').min(0).max(1).step(0.001).name('Color Offset');
 gui.add(waterMat.uniforms.uColorMultiplier, 'value').min(0).max(10).step(0.001).name('Color Multiplier');
+
+gui.add(waterMat.uniforms.uSmallWavesElevation, 'value').min(0).max(1).step(0.001).name('uSmallWavesElevation');
+gui.add(waterMat.uniforms.uSmallWavesFrequency, 'value').min(0).max(30).step(0.001).name('uSmallWavesFrequency');
+gui.add(waterMat.uniforms.uSmallWavesSpeed, 'value').min(0).max(4).step(0.001).name('uSmallWavesSpeed');
+gui.add(waterMat.uniforms.uSmallIterations, 'value').min(0).max(5).step(0.001).name('uSmallIterations');
 
 const water = new Mesh(waterGeo, waterMat);
 water.rotation.x = -Math.PI * 0.5;
