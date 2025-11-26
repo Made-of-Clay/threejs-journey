@@ -1,8 +1,8 @@
-import { PerspectiveCamera, Scene, WebGLRenderer, GridHelper, DirectionalLight, Clock, Mesh, PlaneGeometry, MeshStandardMaterial, AxesHelper, RawShaderMaterial, BufferAttribute, BufferGeometry, Vector2, Color, TextureLoader, LoadingManager, ShaderMaterial, MeshBasicMaterial, CubeTextureLoader, PCFShadowMap, ReinhardToneMapping, WebGLRenderTarget } from 'three';
+import { PerspectiveCamera, Scene, WebGLRenderer, GridHelper, DirectionalLight, Mesh, MeshStandardMaterial, AxesHelper, TextureLoader, CubeTextureLoader, PCFShadowMap, ReinhardToneMapping, WebGLRenderTarget, Vector2 } from 'three';
 
 import './style.css';
 import GUI from 'lil-gui';
-import { DotScreenPass, GammaCorrectionShader, GlitchPass, GLTFLoader, RenderPass, RGBShiftShader, ShaderPass, Timer } from 'three/examples/jsm/Addons.js';
+import { DotScreenPass, GammaCorrectionShader, GlitchPass, GLTFLoader, RenderPass, RGBShiftShader, ShaderPass, SMAAPass, Timer, UnrealBloomPass } from 'three/examples/jsm/Addons.js';
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
 import { EffectComposer } from 'three/examples/jsm/Addons.js';
 console.log(EffectComposer)
@@ -53,10 +53,29 @@ const rgbShiftPass = new ShaderPass(RGBShiftShader);
 effectComposer.addPass(rgbShiftPass);
 rgbShiftPass.enabled = false;
 
+const unrealBloomPass = new UnrealBloomPass(
+    new Vector2(window.innerWidth, window.innerHeight),
+    0.3, // strength
+    0.1, // radius
+    0.1, // threshold
+);
+effectComposer.addPass(unrealBloomPass);
+
+gui.add(unrealBloomPass, 'enabled');
+gui.add(unrealBloomPass, 'strength').min(0).max(2).step(0.001);
+gui.add(unrealBloomPass, 'radius').min(0).max(2).step(0.001);
+gui.add(unrealBloomPass, 'threshold').min(0).max(1).step(0.001);
+
 // Gamma Correction Pass
 const gammaCorrectionPass = new ShaderPass(GammaCorrectionShader);
 effectComposer.addPass(gammaCorrectionPass);
 gammaCorrectionPass.enabled = false;
+
+if (renderer.getPixelRatio() === 1 && !renderer.capabilities.isWebGL2) {
+    const smaaPass = new SMAAPass();
+    effectComposer.addPass(smaaPass);
+    console.log('Using SMAA render pass');
+}
 
 // CONTROLS
 const controls = new OrbitControls(camera, renderer.domElement);
