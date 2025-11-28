@@ -1,11 +1,11 @@
-import { PerspectiveCamera, Scene, WebGLRenderer, GridHelper, DirectionalLight, Mesh, MeshStandardMaterial, AxesHelper, TextureLoader, CubeTextureLoader, PCFShadowMap, ReinhardToneMapping, WebGLRenderTarget, Vector2 } from 'three';
+import { PerspectiveCamera, Scene, WebGLRenderer, GridHelper, DirectionalLight, Mesh, MeshStandardMaterial, AxesHelper, TextureLoader, CubeTextureLoader, PCFShadowMap, ReinhardToneMapping, WebGLRenderTarget, Vector2, Vector3 } from 'three';
 
 import './style.css';
 import GUI from 'lil-gui';
 import { DotScreenPass, GammaCorrectionShader, GlitchPass, GLTFLoader, RenderPass, RGBShiftShader, ShaderPass, SMAAPass, Timer, UnrealBloomPass } from 'three/examples/jsm/Addons.js';
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
 import { EffectComposer } from 'three/examples/jsm/Addons.js';
-console.log(EffectComposer)
+
 const scene = new Scene();
 
 // DEBUG
@@ -30,6 +30,11 @@ const renderTarget = new WebGLRenderTarget(
 const effectComposer = new EffectComposer(renderer, renderTarget);
 effectComposer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 effectComposer.setSize(window.innerWidth, window.innerHeight);
+
+// LOADERS
+const gltfLoader = new GLTFLoader();
+const cubeTextureLoader = new CubeTextureLoader();
+const textureLoader = new TextureLoader();
 
 // CAMERA
 const camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100);
@@ -66,6 +71,82 @@ gui.add(unrealBloomPass, 'strength').min(0).max(2).step(0.001);
 gui.add(unrealBloomPass, 'radius').min(0).max(2).step(0.001);
 gui.add(unrealBloomPass, 'threshold').min(0).max(1).step(0.001);
 
+// Tint Pass
+const TintShader = {
+    uniforms: {
+        tDiffuse: { value: null },
+        uTint: { value: null },
+    },
+    vertexShader: `
+        varying vec2 vUv;
+
+        void main() {
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            vUv = uv;
+        }
+    `,
+    fragmentShader: `
+        uniform sampler2D tDiffuse;
+        uniform vec3 uTint;
+
+        varying vec2 vUv;
+
+        void main() {
+            vec4 color = texture2D(tDiffuse, vUv);
+            color.rgb += uTint;
+            gl_FragColor = color;
+        }
+    `,
+};
+const tintPass = new ShaderPass(TintShader);
+tintPass.material.uniforms.uTint.value = new Vector3(0.05, 0.05, 0.05);
+effectComposer.addPass(tintPass);
+
+// Displacemenet Pass
+const DisplacementShader = {
+    uniforms: {
+        tDiffuse: { value: null },
+        uTime: { value: null },
+        uNormalMap: { value: null },
+    },
+    vertexShader: `
+        varying vec2 vUv;
+
+        void main() {
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            vUv = uv;
+        }
+    `,
+    fragmentShader: `
+        uniform sampler2D tDiffuse;
+        uniform sampler2D uNormalMap;
+        // uniform float uTime;
+
+        varying vec2 vUv;
+
+        void main() {
+            // vec2 newUv = vec2(
+            //     vUv.x,
+            //     vUv.y + sin(vUv.x * 10.0 + uTime) * 0.1
+            // );
+            vec3 normalColor = texture2D(uNormalMap, vUv).xyz * 2.0 - 1.0;
+            vec2 newUv = vUv + normalColor.xy * 0.1;
+            // vec2 newUv = vUv;
+            vec4 color = texture2D(tDiffuse, newUv);
+
+            vec3 lightDirection = normalize(vec3(-1.0, 1.0, 0.0));
+            float lightness = clamp(dot(normalColor, lightDirection), 0.0, 1.0);
+            color.rgb += lightness * 2.0;
+            
+            gl_FragColor = color;
+        }
+    `,
+};
+const displacementPass = new ShaderPass(DisplacementShader);
+displacementPass.material.uniforms.uNormalMap.value = textureLoader.load('/textures/interfaceNormalMap.png');
+displacementPass.material.uniforms.uTime.value = 0;
+effectComposer.addPass(displacementPass);
+
 // Gamma Correction Pass
 const gammaCorrectionPass = new ShaderPass(GammaCorrectionShader);
 effectComposer.addPass(gammaCorrectionPass);
@@ -86,11 +167,6 @@ controls.dampingFactor = 0.1;
 const dirLight = new DirectionalLight('#fff', 4);
 dirLight.position.set(0, 0, 10);
 scene.add(dirLight);
-
-// LOADERS
-const gltfLoader = new GLTFLoader();
-const cubeTextureLoader = new CubeTextureLoader();
-const textureLoader = new TextureLoader();
 
 /**
  * Update all materials
@@ -193,6 +269,8 @@ function animate() {
     const elapsedTime = timer.getElapsed();
     const deltaTime = elapsedTime - previousTime;
     previousTime = elapsedTime;
+
+    displacementPass.material.uniforms.uTime.value = elapsedTime;
 
     controls.update();
 
