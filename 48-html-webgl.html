@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+  <link
+    rel="shortcut icon"
+    href="./src/brain.svg"
+    type="image/x-icon"
+  >
+  <title>Three.js Journey</title>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+    }
+    #content {
+      color: white;
+      position: relative;
+      z-index: 2;
+
+      h1 {
+        padding: 40vh 0;
+      }
+    }
+    .loading {
+      background-color: white;
+      height: 2px;
+      position: absolute;
+      transform: scaleX(var(--scaleX, 0));
+      transform-origin: top left;
+      transition: transform 0.5s;
+      top: 50%;
+      width: 100%;
+      will-change: transform;
+
+      &.finished {
+        transform-origin: top right;
+        --scaleX: 0;
+        transition: transform 1.5s ease-in-out;
+      }
+    }
+    [data-point] {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translateX(var(--translateX, 0)) translateY(var(--translateY, 0));
+      /* transition: transform 0.3s; */
+      will-change: transform;
+
+      &::before {
+        --size: 40px;
+        content: attr(data-point);
+        /* Something with this display is screwy; figure it out if needed; might be pseudo element bug */
+        display: flex;
+        align-items: center;
+        border-radius: 50%;
+        justify-content: center;
+        background-color: #00000077;
+        color: white;
+        cursor: help;
+        font-size: 0.875rem;
+        font-weight: bold;
+        height: var(--size);
+        transform: scale(var(--scale, 0));
+        width: var(--size);
+        will-change: transform;
+      }
+      &:not([data-point="0"]) {
+        display: none;
+      }
+      &:hover > span,
+      &.showing > span {
+        opacity: 1;
+      }
+      > span {
+        background-color: #00000077;
+        display: block;
+        opacity: 0;
+        padding: 1rem;
+        font-size: 1.25rem;
+        transition: opacity 0.3s;
+        width: 200px;
+        will-change: opacity;
+        pointer-events: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="loading"></div>
+  <div data-point="0">
+    <span>Lorem ipsum dolor, sit amet consectetur adipisicing elit.</span>
+  </div>
+  <div data-point="1">
+    <span>Nemo quidem quibusdam ullam exercitationem magni ipsa, cumque nesciunt consectetur ratione rerum placeat.</span>
+  </div>
+  <div data-point="2">
+    <span>Doloremque alias quis minima a quam libero voluptatem reprehenderit.</span>
+  </div>
+  <script
+    type="module"
+    src="/src/html-webgl.ts"
+  ></script>
+</body>
+
+</html>
