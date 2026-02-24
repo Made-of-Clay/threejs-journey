@@ -61,20 +61,14 @@ const poleLightMaterial = new MeshBasicMaterial({ color: '#ffffe5' });
 /**
  * Models
  */
-const emissiveElements = ['Light001', 'Light003', 'Gateway'];
 gltfLoader.load(
     '/portal/portal.glb',
     (gltf) => {
-        gltf.scene.traverse((child) => {
-            // Light001, Light003, Gateway
-            // Emmissive materials
-            if (child instanceof Mesh) {
-                child.material = bakedMaterial;
-            }
-        });
+        const bakedMesh = gltf.scene.getObjectByName('Baked') as Mesh;
         const poleLight1 = gltf.scene.getObjectByName('Light001') as Mesh;
         const poleLight2 = gltf.scene.getObjectByName('Light003') as Mesh;
         const portalLight = gltf.scene.getObjectByName('Gateway') as Mesh;
+        bakedMesh.material = bakedMaterial;
         poleLight1.material = poleLightMaterial;
         poleLight2.material = poleLightMaterial;
         portalLight.material = poleLightMaterial;
