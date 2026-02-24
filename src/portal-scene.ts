@@ -1,10 +1,11 @@
-import { PerspectiveCamera, Scene, WebGLRenderer, GridHelper, DirectionalLight, Mesh, MeshStandardMaterial, AxesHelper, TextureLoader, CubeTextureLoader, PCFShadowMap, ReinhardToneMapping, WebGLRenderTarget, PlaneGeometry, MeshBasicMaterial, ShaderMaterial, LoadingManager, Vector3, Raycaster, Vector2, SRGBColorSpace } from 'three';
+import { PerspectiveCamera, Scene, WebGLRenderer, GridHelper, DirectionalLight, Mesh, AxesHelper, TextureLoader, PCFShadowMap, ReinhardToneMapping, MeshBasicMaterial, LoadingManager, SRGBColorSpace, BufferGeometry, BufferAttribute, PointsMaterial, Points, ShaderMaterial, AdditiveBlending } from 'three';
 
 import './style.css';
 import GUI from 'lil-gui';
 import { DRACOLoader, GLTFLoader, Timer } from 'three/examples/jsm/Addons.js';
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
-import {gsap} from 'gsap';
+import firefliesVertexShader from './shaders/fireflies/vertex.glsl?raw';
+import firefliesFragmentShader from './shaders/fireflies/fragment.glsl?raw';
 
 const scene = new Scene();
 
@@ -20,6 +21,12 @@ renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = PCFShadowMap;
 renderer.toneMapping = ReinhardToneMapping;
 renderer.toneMappingExposure = 1.5;
+
+params.clearColor = '#231c0b';
+renderer.setClearColor(params.clearColor);
+gui.addColor(params, 'clearColor').onChange(() => {
+    renderer.setClearColor(params.clearColor);
+});
 
 // LOADERS
 let isSceneReady = false;
@@ -77,6 +84,42 @@ gltfLoader.load(
 );
 
 /**
+ * Fireflies
+ */
+const firefliesGeo = new BufferGeometry();
+const firefliesCount = 30;
+const positionArray = new Float32Array(firefliesCount * 3);
+const scaleArray = new Float32Array(firefliesCount);
+
+for (let i = 0; i < firefliesCount; i++) {
+    positionArray[i * 3 + 0] = (Math.random() - 0.5) * 4;
+    positionArray[i * 3 + 1] = (Math.random() * 0.5) * 4;
+    positionArray[i * 3 + 2] = (Math.random() - 0.5) * 4;
+
+    scaleArray[i] = Math.random();
+}
+firefliesGeo.setAttribute('position', new BufferAttribute(positionArray, 3));
+firefliesGeo.setAttribute('aScale', new BufferAttribute(scaleArray, 1));
+
+const firefliesMat = new ShaderMaterial({
+    uniforms: {
+        uTime: { value: 0 },
+        uPixelRatio: { value: Math.min(window.devicePixelRatio, 2) },
+        uSize: { value: 100 },
+    },
+    blending: AdditiveBlending,
+    depthWrite: false,
+    vertexShader: firefliesVertexShader,
+    fragmentShader: firefliesFragmentShader,
+    transparent: true,
+    // sizeAttenuation: true,
+    // color: '#ffffe5',
+});
+gui.add(firefliesMat.uniforms.uSize, 'value').min(0).max(500).step(1).name('Fireflies Size');
+const fireflies = new Points(firefliesGeo, firefliesMat);
+scene.add(fireflies);
+
+/**
  * Lights
  */
 const directionalLight = new DirectionalLight('#ffffff', 3);
@@ -104,6 +147,9 @@ window.addEventListener('resize', () => {
     // Update renderer
     renderer.setSize(sizes.width, sizes.height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    // Update fireflies
+    firefliesMat.uniforms.uPixelRatio.value = Math.min(window.devicePixelRatio, 2);
 });
 
 const gridHelper = new GridHelper(10, 10, '#aaa', '#aaa');
@@ -129,6 +175,8 @@ function animate() {
     const deltaTime = elapsedTime - previousTime;
     deltaTime;
     previousTime = elapsedTime;
+
+    firefliesMat.uniforms.uTime.value = elapsedTime;
 
     controls.update();
 
