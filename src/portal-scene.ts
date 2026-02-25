@@ -1,4 +1,4 @@
-import { PerspectiveCamera, Scene, WebGLRenderer, GridHelper, DirectionalLight, Mesh, AxesHelper, TextureLoader, PCFShadowMap, ReinhardToneMapping, MeshBasicMaterial, LoadingManager, SRGBColorSpace, BufferGeometry, BufferAttribute, PointsMaterial, Points, ShaderMaterial, AdditiveBlending } from 'three';
+import { PerspectiveCamera, Scene, WebGLRenderer, GridHelper, DirectionalLight, Mesh, AxesHelper, TextureLoader, PCFShadowMap, ReinhardToneMapping, MeshBasicMaterial, LoadingManager, SRGBColorSpace, BufferGeometry, BufferAttribute, PointsMaterial, Points, ShaderMaterial, AdditiveBlending, Color } from 'three';
 
 import './style.css';
 import GUI from 'lil-gui';
@@ -6,6 +6,8 @@ import { DRACOLoader, GLTFLoader, Timer } from 'three/examples/jsm/Addons.js';
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
 import firefliesVertexShader from './shaders/fireflies/vertex.glsl?raw';
 import firefliesFragmentShader from './shaders/fireflies/fragment.glsl?raw';
+import portalVertexShader from './shaders/portal/vertex.glsl?raw';
+import portalFragmentShader from './shaders/portal/fragment.glsl?raw';
 
 const scene = new Scene();
 
@@ -64,6 +66,25 @@ bakedTexture.colorSpace = SRGBColorSpace;
 // MATERIALS
 const bakedMaterial = new MeshBasicMaterial({ map: bakedTexture });
 const poleLightMaterial = new MeshBasicMaterial({ color: '#ffffe5' });
+const portalLightMaterial = new ShaderMaterial({
+    uniforms: {
+        uTime: { value: 0 },
+        uColorStart: { value: new Color('#918b6e') },
+        uColorEnd: { value: new Color('#dee8c9') },
+    },
+    vertexShader: portalVertexShader,
+    fragmentShader: portalFragmentShader,
+});
+
+params.portalColorStart = portalLightMaterial.uniforms.uColorStart.value;
+params.portalColorEnd = portalLightMaterial.uniforms.uColorEnd.value;
+
+gui.addColor(params, 'portalColorStart').onChange(() => {
+    portalLightMaterial.uniforms.uColorStart.value.set(params.portalColorStart);
+});
+gui.addColor(params, 'portalColorEnd').onChange(() => {
+    portalLightMaterial.uniforms.uColorEnd.value.set(params.portalColorEnd);
+});
 
 /**
  * Models
@@ -78,7 +99,7 @@ gltfLoader.load(
         bakedMesh.material = bakedMaterial;
         poleLight1.material = poleLightMaterial;
         poleLight2.material = poleLightMaterial;
-        portalLight.material = poleLightMaterial;
+        portalLight.material = portalLightMaterial;
         scene.add(gltf.scene);
     }
 );
@@ -177,6 +198,7 @@ function animate() {
     previousTime = elapsedTime;
 
     firefliesMat.uniforms.uTime.value = elapsedTime;
+    portalLightMaterial.uniforms.uTime.value = elapsedTime;
 
     controls.update();
 
