@@ -1,4 +1,4 @@
-import { PerspectiveCamera, Scene, WebGLRenderer, TextureLoader, GridHelper, CubeTextureLoader, Mesh, MeshStandardMaterial, DirectionalLight, BufferGeometry } from 'three';
+import { PerspectiveCamera, Scene, WebGLRenderer, TextureLoader, GridHelper, CubeTextureLoader, Mesh, MeshStandardMaterial, DirectionalLight, BufferGeometry, MeshDepthMaterial, RGBADepthPacking } from 'three';
 
 import './style.css';
 import GUI from 'lil-gui';
@@ -57,6 +57,10 @@ const normalTexture = textureLoader.load('/models/LeePerrySmith/normal.jpg');
 const material = new MeshStandardMaterial({
     map: mapTexture,
     normalMap: normalTexture,
+});
+
+const depthMaterial = new MeshDepthMaterial({
+    depthPacking: RGBADepthPacking,
 });
 
 const customUniforms = {
