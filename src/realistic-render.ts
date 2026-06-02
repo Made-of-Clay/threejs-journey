@@ -1,47 +1,70 @@
-import { PerspectiveCamera, Scene, WebGLRenderer, TextureLoader, LoadingManager, GridHelper, DirectionalLight, Clock, AmbientLight, SphereGeometry, Mesh, MeshBasicMaterial, Raycaster, Vector3, Vector2, Group, type Object3DEventMap, TorusKnotGeometry, CubeTextureLoader, MeshStandardMaterial, EquirectangularReflectionMapping, SRGBColorSpace, TorusGeometry, WebGLCubeRenderTarget, FloatType, HalfFloatType, CubeCamera, Color, ACESFilmicToneMapping, NoToneMapping, LinearToneMapping, ReinhardToneMapping, CineonToneMapping, PCFSoftShadowMap, CameraHelper, Plane, PlaneGeometry } from 'three';
+import {
+    PerspectiveCamera,
+    Scene,
+    WebGLRenderer,
+    TextureLoader,
+    LoadingManager,
+    GridHelper,
+    DirectionalLight,
+    Clock,
+    AmbientLight,
+    Mesh,
+    CubeTextureLoader,
+    MeshStandardMaterial,
+    SRGBColorSpace,
+    WebGLCubeRenderTarget,
+    HalfFloatType,
+    CubeCamera,
+    ACESFilmicToneMapping,
+    NoToneMapping,
+    LinearToneMapping,
+    ReinhardToneMapping,
+    CineonToneMapping,
+    PCFSoftShadowMap,
+    CameraHelper,
+    PlaneGeometry,
+} from 'three';
 
 import './style.css';
 import GUI from 'lil-gui';
-import { EXRLoader, GLTFLoader, GroundedSkybox, RGBELoader, Timer, type GLTF } from 'three/examples/jsm/Addons.js';
+import { EXRLoader, GLTFLoader, RGBELoader, Timer } from 'three/examples/jsm/Addons.js';
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
-import { TorusKnot } from 'three/examples/jsm/curves/CurveExtras.js';
 
 const scene = new Scene();
 
 function updateAllMaterials() {
-    scene.traverse(child => {
+    scene.traverse((child) => {
         if ((child as any).isMesh) {
             child.castShadow = true;
             child.receiveShadow = true;
         }
-    })
+    });
 }
 
 // DEBUG
 const gui = new GUI();
-const params: Record<string, any> = {
-};
 
 // TEXTURES
 const loadingManager = new LoadingManager(console.log, undefined, console.error);
 const textureLoader = new TextureLoader(loadingManager);
 const gltfLoader = new GLTFLoader(loadingManager);
 const cubeTextureLoader = new CubeTextureLoader(loadingManager);
-const rgbeLoader = new RGBELoader(loadingManager);
-const exrLoader = new EXRLoader(loadingManager);
 
-gltfLoader.load(
-    'models/FlightHelmet/glTF/FlightHelmet.gltf',
-    (gltf) => {
-        gltf.scene.scale.set(10, 10, 10);
-        scene.add(gltf.scene);
-        updateAllMaterials();
-    }
+gltfLoader.load('models/FlightHelmet/glTF/FlightHelmet.gltf', (gltf) => {
+    gltf.scene.scale.set(10, 10, 10);
+    scene.add(gltf.scene);
+    updateAllMaterials();
+});
+
+const floorColorTexture = textureLoader.load(
+    '/textures/wood_cabinet_worn_long/wood_cabinet_worn_long_diff_1k.jpg',
 );
-
-const floorColorTexture = textureLoader.load('/textures/wood_cabinet_worn_long/wood_cabinet_worn_long_diff_1k.jpg');
-const floorNormalTexture = textureLoader.load('/textures/wood_cabinet_worn_long/wood_cabinet_worn_long_nor_gl_1k.png');
-const floorAORoughnessMetalnessTexture = textureLoader.load('/textures/wood_cabinet_worn_long/wood_cabinet_worn_long_arm_1k.jpg');
+const floorNormalTexture = textureLoader.load(
+    '/textures/wood_cabinet_worn_long/wood_cabinet_worn_long_nor_gl_1k.png',
+);
+const floorAORoughnessMetalnessTexture = textureLoader.load(
+    '/textures/wood_cabinet_worn_long/wood_cabinet_worn_long_arm_1k.jpg',
+);
 
 floorColorTexture.colorSpace = SRGBColorSpace;
 
@@ -58,9 +81,15 @@ const floor = new Mesh(
 floor.rotation.x = -Math.PI * 0.5;
 scene.add(floor);
 
-const wallColorTexture = textureLoader.load('/textures/castle_brick_broken_06/castle_brick_broken_06_diff_1k.jpg');
-const wallNormalTexture = textureLoader.load('/textures/castle_brick_broken_06/castle_brick_broken_06_nor_gl_1k.png');
-const wallAORoughnessMetalnessTexture = textureLoader.load('/textures/castle_brick_broken_06/castle_brick_broken_06_arm_1k.jpg');
+const wallColorTexture = textureLoader.load(
+    '/textures/castle_brick_broken_06/castle_brick_broken_06_diff_1k.jpg',
+);
+const wallNormalTexture = textureLoader.load(
+    '/textures/castle_brick_broken_06/castle_brick_broken_06_nor_gl_1k.png',
+);
+const wallAORoughnessMetalnessTexture = textureLoader.load(
+    '/textures/castle_brick_broken_06/castle_brick_broken_06_arm_1k.jpg',
+);
 
 wallColorTexture.colorSpace = SRGBColorSpace;
 
@@ -78,15 +107,12 @@ wall.position.y = 4;
 wall.position.z = -4;
 scene.add(wall);
 
-gltfLoader.load(
-    '/models/hamburger.glb',
-    (gltf) => {
-        gltf.scene.scale.set(0.4, 0.4, 0.4);
-        gltf.scene.position.set(3.5, 0, 0);
-        scene.add(gltf.scene);
-        updateAllMaterials();
-    },
-);
+gltfLoader.load('/models/hamburger.glb', (gltf) => {
+    gltf.scene.scale.set(0.4, 0.4, 0.4);
+    gltf.scene.position.set(3.5, 0, 0);
+    scene.add(gltf.scene);
+    updateAllMaterials();
+});
 
 // ENVIRONMENT MAP
 // KDR cube texture
@@ -116,8 +142,16 @@ scene.backgroundIntensity = 1;
 gui.add(scene, 'environmentIntensity').min(0).max(10).step(0.001);
 gui.add(scene, 'backgroundBlurriness').min(0).max(1).step(0.001);
 gui.add(scene, 'backgroundIntensity').min(0).max(10).step(0.001);
-gui.add(scene.backgroundRotation, 'y').min(0).max(Math.PI * 2).step(0.001).name('Background Rotation');
-gui.add(scene.environmentRotation, 'y').min(0).max(Math.PI * 2).step(0.001).name('Environment Rotation');
+gui.add(scene.backgroundRotation, 'y')
+    .min(0)
+    .max(Math.PI * 2)
+    .step(0.001)
+    .name('Background Rotation');
+gui.add(scene.environmentRotation, 'y')
+    .min(0)
+    .max(Math.PI * 2)
+    .step(0.001)
+    .name('Environment Rotation');
 
 // RENDERER
 const renderer = new WebGLRenderer({ alpha: true, antialias: true });
@@ -187,14 +221,12 @@ gui.add(gridHelper, 'visible').name('Show Grid Helper');
 document.body.appendChild(renderer.domElement);
 
 const timer = new Timer();
-const clock = new Clock();
 let previousTime = 0;
 
 // NOTE: just started 'Using a Library' section of video at end of lunch
 function animate() {
     timer.update();
     const elapsedTime = timer.getElapsed();
-    const deltaTime = elapsedTime - previousTime;
     previousTime = elapsedTime;
 
     // Real time env map

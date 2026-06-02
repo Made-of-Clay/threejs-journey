@@ -1,7 +1,26 @@
-import { MeshBasicMaterial, Mesh, AmbientLight, PerspectiveCamera, Scene, WebGLRenderer, Clock, PointLight, BoxGeometry, LoadingManager, AxesHelper, TextureLoader, MeshMatcapMaterial, SRGBColorSpace, TorusGeometry, SphereGeometry, MeshStandardMaterial, PlaneGeometry, DirectionalLight, HemisphereLight, RectAreaLight, CameraHelper, PCFSoftShadowMap, SpotLight } from 'three'
+import {
+    MeshBasicMaterial,
+    Mesh,
+    AmbientLight,
+    PerspectiveCamera,
+    Scene,
+    WebGLRenderer,
+    Clock,
+    PointLight,
+    AxesHelper,
+    TextureLoader,
+    SRGBColorSpace,
+    SphereGeometry,
+    MeshStandardMaterial,
+    PlaneGeometry,
+    DirectionalLight,
+    CameraHelper,
+    PCFSoftShadowMap,
+    SpotLight,
+} from 'three';
 import './style.css';
 import GUI from 'lil-gui';
-import { FontLoader, OrbitControls, TextGeometry } from 'three/examples/jsm/Addons.js';
+import { OrbitControls } from 'three/examples/jsm/Addons.js';
 
 const scene = new Scene();
 
@@ -13,7 +32,6 @@ const simpleShadow = textureLoader.load('/simpleShadow.jpg');
 
 // DEBUG
 const gui = new GUI();
-const debugObject: Record<string, any> = {};
 
 // RENDERER
 const renderer = new WebGLRenderer();
@@ -85,10 +103,7 @@ gui.add(ambientLight, 'intensity').min(0).max(3).step(0.001);
 const material = new MeshStandardMaterial();
 material.roughness = 0.4;
 
-const sphere = new Mesh(
-    new SphereGeometry(0.5, 32, 32),
-    material,
-);
+const sphere = new Mesh(new SphereGeometry(0.5, 32, 32), material);
 sphere.castShadow = true;
 
 const plane = new Mesh(
@@ -96,7 +111,7 @@ const plane = new Mesh(
     // new MeshBasicMaterial({ map: bakedShadow }),
     material,
 );
-plane.rotateX(-(Math.PI) * 0.5);
+plane.rotateX(-Math.PI * 0.5);
 plane.position.y = -0.5;
 plane.receiveShadow = true;
 
@@ -135,7 +150,7 @@ function animate() {
     // update the shadow
     sphereShadow.position.x = sphere.position.x;
     sphereShadow.position.z = sphere.position.z;
-    sphereShadow.material.opacity = (1 - sphere.position.y) * 0.3
+    sphereShadow.material.opacity = (1 - sphere.position.y) * 0.3;
 
     controls.update();
 

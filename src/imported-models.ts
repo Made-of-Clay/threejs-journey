@@ -1,4 +1,18 @@
-import { PerspectiveCamera, Scene, WebGLRenderer, TextureLoader, LoadingManager, GridHelper, Mesh, TorusGeometry, ConeGeometry, TorusKnotGeometry, MeshToonMaterial, DirectionalLight, NearestFilter, Group, Clock, BufferGeometry, BufferAttribute, PointsMaterial, Points, SphereGeometry, MeshBasicMaterial, MeshStandardMaterial, AmbientLight, PlaneGeometry, Vector3, BoxGeometry, AnimationMixer } from 'three';
+import {
+    PerspectiveCamera,
+    Scene,
+    WebGLRenderer,
+    TextureLoader,
+    LoadingManager,
+    GridHelper,
+    Mesh,
+    DirectionalLight,
+    Clock,
+    MeshStandardMaterial,
+    AmbientLight,
+    PlaneGeometry,
+    AnimationMixer,
+} from 'three';
 
 import './style.css';
 import GUI from 'lil-gui';
@@ -38,8 +52,6 @@ gltfLoader.load(
 
 // DEBUG
 const gui = new GUI();
-const params: Record<string, any> = {
-};
 
 // RENDERER
 const renderer = new WebGLRenderer({ alpha: true });
@@ -75,7 +87,6 @@ gui.add(gridHelper, 'visible').name('Show Grid Helper');
 
 // TEXTURES
 const loadingManager = new LoadingManager(console.log, undefined, console.error);
-const textureLoader = new TextureLoader(loadingManager);
 
 // OBJECTS
 const floor = new Mesh(
@@ -95,7 +106,6 @@ scene.add(floor);
 document.body.appendChild(renderer.domElement);
 
 const timer = new Timer();
-const clock = new Clock();
 let previousTime = 0;
 
 // NOTE: just started 'Using a Library' section of video at end of lunch

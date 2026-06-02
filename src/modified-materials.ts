@@ -1,4 +1,16 @@
-import { PerspectiveCamera, Scene, WebGLRenderer, TextureLoader, GridHelper, CubeTextureLoader, Mesh, MeshStandardMaterial, DirectionalLight, BufferGeometry, MeshDepthMaterial, RGBADepthPacking } from 'three';
+import {
+    PerspectiveCamera,
+    Scene,
+    WebGLRenderer,
+    TextureLoader,
+    CubeTextureLoader,
+    Mesh,
+    MeshStandardMaterial,
+    DirectionalLight,
+    BufferGeometry,
+    MeshDepthMaterial,
+    RGBADepthPacking,
+} from 'three';
 
 import './style.css';
 import GUI from 'lil-gui';
@@ -7,8 +19,6 @@ import { GLTFLoader, OrbitControls, Timer } from 'three/examples/jsm/Addons.js';
 const scene = new Scene();
 
 // DEBUG
-const gui = new GUI();
-const params: Record<string, any> = {};
 
 // RENDERER
 const renderer = new WebGLRenderer();
@@ -45,7 +55,7 @@ const environmentMap = cubeTextureLoader.load([
     '/textures/environmentMaps/0/ny.jpg',
     '/textures/environmentMaps/0/pz.jpg',
     '/textures/environmentMaps/0/nz.jpg',
-])
+]);
 
 scene.background = environmentMap;
 scene.environment = environmentMap;
@@ -59,45 +69,44 @@ const material = new MeshStandardMaterial({
     normalMap: normalTexture,
 });
 
-const depthMaterial = new MeshDepthMaterial({
-    depthPacking: RGBADepthPacking,
-});
-
 const customUniforms = {
     uTime: { value: 0 },
-}
+};
 material.onBeforeCompile = (shader) => {
     shader.uniforms.uTime = customUniforms.uTime;
-    shader.vertexShader = shader.vertexShader.replace('#include <common>', `
+    shader.vertexShader = shader.vertexShader.replace(
+        '#include <common>',
+        `
         #include <common>
         uniform float uTime;
 
         mat2 get2dRotationMatrix(float _angle) {
             return mat2(cos(_angle), -sin(_angle), sin(_angle), cos(_angle));
         }
-    `);
-    shader.vertexShader = shader.vertexShader.replace('#include <begin_vertex>', `
+    `,
+    );
+    shader.vertexShader = shader.vertexShader.replace(
+        '#include <begin_vertex>',
+        `
         #include <begin_vertex>
         float angle = position.y * 0.2 + uTime;
         mat2 rotationMatrix = get2dRotationMatrix(angle);
         transformed.xz = rotationMatrix * transformed.xz;
-    `);
+    `,
+    );
     // mat2 get2dRotationMatrix(float _angle) {
     //         return mat2(cos(_angle), -sin(_angle), sin(_angle), cos(_angle));
     //     }
     console.log(shader);
 };
 
-gltfLoader.load(
-    '/models/LeePerrySmith/LeePerrySmith.glb',
-    (gltf) => {
-        const mesh = gltf.scene.children[0] as Mesh;
-        mesh.rotation.y = Math.PI * 0.5;
-        mesh.material = material;
-        scene.add(mesh);
-        updateAllMaterials();
-    }
-);
+gltfLoader.load('/models/LeePerrySmith/LeePerrySmith.glb', (gltf) => {
+    const mesh = gltf.scene.children[0] as Mesh;
+    mesh.rotation.y = Math.PI * 0.5;
+    mesh.material = material;
+    scene.add(mesh);
+    updateAllMaterials();
+});
 
 // CONTROLS
 const controls = new OrbitControls(camera, renderer.domElement);
@@ -115,10 +124,7 @@ dirLight.position.set(0.25, 2, -2.25);
 scene.add(dirLight);
 
 // Plane
-const plane = new Mesh(
-    new BufferGeometry(),
-    new MeshStandardMaterial(),
-);
+const plane = new Mesh(new BufferGeometry(), new MeshStandardMaterial());
 scene.add(plane);
 
 // RENDER

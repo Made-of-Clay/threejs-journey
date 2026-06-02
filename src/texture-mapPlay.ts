@@ -4,10 +4,6 @@ import GUI from 'lil-gui';
 import './style.css';
 
 const gui = new GUI();
-const tweaks = {
-    heightSegments: 1,
-    widthSegments: 1,
-};
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100);
@@ -28,7 +24,6 @@ wallColorTexture.wrapT = THREE.RepeatWrapping;
 // displacementMap.repeat.set(1, 1);
 // displacementMap.wrapS = THREE.RepeatWrapping;
 // displacementMap.wrapT = THREE.RepeatWrapping;
-
 
 const planeGeometry = new THREE.PlaneGeometry(10, 10, 50, 50);
 

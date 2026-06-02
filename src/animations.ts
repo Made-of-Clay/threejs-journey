@@ -1,5 +1,15 @@
 import './style.css';
-import { AmbientLight, AxesHelper, BoxGeometry, Clock, Group, Mesh, MeshBasicMaterial, PerspectiveCamera, Scene, WebGLRenderer } from 'three';
+import {
+    AmbientLight,
+    AxesHelper,
+    BoxGeometry,
+    Group,
+    Mesh,
+    MeshBasicMaterial,
+    PerspectiveCamera,
+    Scene,
+    WebGLRenderer,
+} from 'three';
 import gsap from 'gsap';
 
 const scene = new Scene();
@@ -16,7 +26,7 @@ scene.add(axesHelper);
 const geometry = new BoxGeometry(1, 1, 1);
 const material = new MeshBasicMaterial({ color: 0xaa00bb });
 const cube = new Mesh(geometry, material);
-cube.position.y = 3
+cube.position.y = 3;
 // cube.rotation.
 // scene.add(cube);
 
@@ -34,7 +44,7 @@ scene.add(group);
 
 camera.lookAt(group.position);
 
-const color = 0xFFFFFF;
+const color = 0xffffff;
 const intensity = 1;
 const light = new AmbientLight(color, intensity);
 scene.add(light);
@@ -45,7 +55,7 @@ gsap.to(cube.position, {
     duration: 1,
     delay: 1,
     x: 2,
-})
+});
 
 // const clock = new Clock();
 

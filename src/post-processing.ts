@@ -1,16 +1,42 @@
-import { PerspectiveCamera, Scene, WebGLRenderer, GridHelper, DirectionalLight, Mesh, MeshStandardMaterial, AxesHelper, TextureLoader, CubeTextureLoader, PCFShadowMap, ReinhardToneMapping, WebGLRenderTarget, Vector2, Vector3 } from 'three';
+import {
+    PerspectiveCamera,
+    Scene,
+    WebGLRenderer,
+    GridHelper,
+    DirectionalLight,
+    Mesh,
+    MeshStandardMaterial,
+    AxesHelper,
+    TextureLoader,
+    CubeTextureLoader,
+    PCFShadowMap,
+    ReinhardToneMapping,
+    WebGLRenderTarget,
+    Vector2,
+    Vector3,
+} from 'three';
 
 import './style.css';
 import GUI from 'lil-gui';
-import { DotScreenPass, GammaCorrectionShader, GlitchPass, GLTFLoader, RenderPass, RGBShiftShader, ShaderPass, SMAAPass, Timer, UnrealBloomPass } from 'three/examples/jsm/Addons.js';
-import { OrbitControls } from 'three/examples/jsm/Addons.js';
-import { EffectComposer } from 'three/examples/jsm/Addons.js';
+import {
+    DotScreenPass,
+    GammaCorrectionShader,
+    GlitchPass,
+    GLTFLoader,
+    RenderPass,
+    RGBShiftShader,
+    ShaderPass,
+    SMAAPass,
+    OrbitControls,
+    UnrealBloomPass,
+    EffectComposer,
+} from 'three/examples/jsm/Addons.js';
+import { Timer } from 'three';
 
 const scene = new Scene();
 
 // DEBUG
 const gui = new GUI();
-const params: Record<string, any> = {};
 
 // RENDERER
 const renderer = new WebGLRenderer({ alpha: true, antialias: true });
@@ -21,11 +47,9 @@ renderer.shadowMap.type = PCFShadowMap;
 renderer.toneMapping = ReinhardToneMapping;
 renderer.toneMappingExposure = 1.5;
 
-const renderTarget = new WebGLRenderTarget(
-    800,
-    600,
-    { samples: renderer.getPixelRatio() === 1 ? 2 : 0 },
-);
+const renderTarget = new WebGLRenderTarget(800, 600, {
+    samples: renderer.getPixelRatio() === 1 ? 2 : 0,
+});
 
 const effectComposer = new EffectComposer(renderer, renderTarget);
 effectComposer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -143,7 +167,9 @@ const DisplacementShader = {
     `,
 };
 const displacementPass = new ShaderPass(DisplacementShader);
-displacementPass.material.uniforms.uNormalMap.value = textureLoader.load('/textures/interfaceNormalMap.png');
+displacementPass.material.uniforms.uNormalMap.value = textureLoader.load(
+    '/textures/interfaceNormalMap.png',
+);
 displacementPass.material.uniforms.uTime.value = 0;
 effectComposer.addPass(displacementPass);
 
@@ -173,7 +199,7 @@ scene.add(dirLight);
  */
 function updateAllMaterials() {
     scene.traverse((child) => {
-        if(child instanceof Mesh && child.material instanceof MeshStandardMaterial) {
+        if (child instanceof Mesh && child.material instanceof MeshStandardMaterial) {
             child.material.envMapIntensity = 2.5;
             child.material.needsUpdate = true;
             child.castShadow = true;
@@ -192,7 +218,7 @@ const environmentMap = cubeTextureLoader.load([
     '/textures/environmentMaps/0/ny.jpg',
     '/textures/environmentMaps/0/pz.jpg',
     '/textures/environmentMaps/0/nz.jpg',
-])
+]);
 
 scene.background = environmentMap;
 scene.environment = environmentMap;
@@ -200,17 +226,13 @@ scene.environment = environmentMap;
 /**
  * Models
  */
-gltfLoader.load(
-    '/models/DamagedHelmet/glTF/DamagedHelmet.gltf',
-    (gltf) =>
-    {
-        gltf.scene.scale.set(2, 2, 2);
-        gltf.scene.rotation.y = Math.PI * 0.5;
-        scene.add(gltf.scene);
+gltfLoader.load('/models/DamagedHelmet/glTF/DamagedHelmet.gltf', (gltf) => {
+    gltf.scene.scale.set(2, 2, 2);
+    gltf.scene.rotation.y = Math.PI * 0.5;
+    scene.add(gltf.scene);
 
-        updateAllMaterials();
-    }
-);
+    updateAllMaterials();
+});
 
 /**
  * Lights
@@ -220,7 +242,7 @@ directionalLight.castShadow = true;
 directionalLight.shadow.mapSize.set(1024, 1024);
 directionalLight.shadow.camera.far = 15;
 directionalLight.shadow.normalBias = 0.05;
-directionalLight.position.set(0.25, 3, - 2.25);
+directionalLight.position.set(0.25, 3, -2.25);
 scene.add(directionalLight);
 
 const sizes = {
@@ -261,14 +283,11 @@ gui.add(axesHelper, 'visible').name('Show Axes Helper');
 document.body.appendChild(renderer.domElement);
 
 const timer = new Timer();
-let previousTime = 0;
 
 // NOTE: just started 'Using a Library' section of video at end of lunch
 function animate() {
     timer.update();
     const elapsedTime = timer.getElapsed();
-    const deltaTime = elapsedTime - previousTime;
-    previousTime = elapsedTime;
 
     displacementPass.material.uniforms.uTime.value = elapsedTime;
 

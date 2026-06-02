@@ -1,6 +1,15 @@
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
 import './style.css';
-import { AmbientLight, AxesHelper, BoxGeometry, Clock, Mesh, MeshBasicMaterial, OrthographicCamera, PerspectiveCamera, Scene, WebGLRenderer } from 'three';
+import {
+    AmbientLight,
+    AxesHelper,
+    BoxGeometry,
+    Mesh,
+    MeshBasicMaterial,
+    PerspectiveCamera,
+    Scene,
+    WebGLRenderer,
+} from 'three';
 
 const scene = new Scene();
 
@@ -32,7 +41,7 @@ cube.position.y = 0;
 scene.add(cube);
 
 // LIGHT
-const color = 0xFFFFFF;
+const color = 0xffffff;
 const intensity = 1;
 const light = new AmbientLight(color, intensity);
 scene.add(light);
@@ -42,7 +51,7 @@ const cursor = { x: 0, y: 0 };
 window.addEventListener('mousemove', (event) => {
     cursor.x = -(event.clientX / window.innerWidth - 0.5);
     cursor.y = -(event.clientY / window.innerHeight - 0.5);
-})
+});
 
 document.body.appendChild(renderer.domElement);
 

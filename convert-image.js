@@ -18,7 +18,9 @@ const outputFormat = process.argv[3 + indexOffset].toLowerCase();
 
 const validFormats = ['jpeg', 'jpg', 'png', 'webp', 'tiff', 'avif', 'gif', 'heif'];
 if (!validFormats.includes(outputFormat)) {
-    console.error(`Invalid output format. Supported formats: ${validFormats.join(', ')}; Given format: ${outputFormat}`);
+    console.error(
+        `Invalid output format. Supported formats: ${validFormats.join(', ')}; Given format: ${outputFormat}`,
+    );
     process.exit(1);
 }
 
@@ -31,12 +33,12 @@ const { name } = path.parse(inputImage);
 const outputImage = `${name}.${outputFormat}`;
 
 sharp(inputImage)
-[outputFormat]()
+    [outputFormat]()
     .toFile(outputImage)
     .then(() => {
         console.log(`Converted ${inputImage} to ${outputImage}`);
     })
-    .catch(err => {
+    .catch((err) => {
         console.error('Error during conversion:', err);
         process.exit(1);
     });

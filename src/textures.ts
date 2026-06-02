@@ -1,6 +1,16 @@
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
 import './style.css';
-import { AmbientLight, BoxGeometry, LoadingManager, Mesh, MeshBasicMaterial, PerspectiveCamera, Scene, TextureLoader, WebGLRenderer } from 'three';
+import {
+    AmbientLight,
+    BoxGeometry,
+    LoadingManager,
+    Mesh,
+    MeshBasicMaterial,
+    PerspectiveCamera,
+    Scene,
+    TextureLoader,
+    WebGLRenderer,
+} from 'three';
 import GUI from 'lil-gui';
 
 // TEXTURES
@@ -10,13 +20,7 @@ const loadManager = new LoadingManager(
     (...args) => console.log('on error', args),
 );
 const textureLoader = new TextureLoader(loadManager); // can load multiple textures
-const alphaTexture = textureLoader.load('/door.alpha.jpg');
-const ambientTexture = textureLoader.load('/door.ambient.jpg');
 const colorTexture = textureLoader.load('/door.color.jpg');
-const heightTexture = textureLoader.load('/door.height.jpg');
-const metalnessTexture = textureLoader.load('/door.metalness.jpg');
-const normalTexture = textureLoader.load('/door.normal.jpg');
-const roughnessTexture = textureLoader.load('/door.roughness.jpg');
 
 // DEBUG
 const gui = new GUI();
@@ -50,7 +54,8 @@ const cubeTweaks = gui.addFolder('Cube');
 cubeTweaks.add(cube.position, 'y').min(-3).max(3).step(0.1).name('Cube Y');
 cubeTweaks.add(cube, 'visible').name('Cube Visible');
 cubeTweaks.add(material, 'wireframe').name('Cube Wireframe');
-cubeTweaks.addColor(debugObject, 'color')
+cubeTweaks
+    .addColor(debugObject, 'color')
     .name('Cube Color')
     .onChange((newColor: string) => {
         console.log('color changed', newColor);
@@ -58,7 +63,7 @@ cubeTweaks.addColor(debugObject, 'color')
     });
 
 // LIGHT
-const color = 0xFFFFFF;
+const color = 0xffffff;
 const intensity = 1;
 const light = new AmbientLight(color, intensity);
 scene.add(light);

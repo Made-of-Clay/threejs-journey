@@ -1,41 +1,45 @@
-import { PerspectiveCamera, Scene, WebGLRenderer, TextureLoader, LoadingManager, GridHelper, DirectionalLight, Clock, AmbientLight, SphereGeometry, Mesh, MeshBasicMaterial, Raycaster, Vector3, Vector2, Group, type Object3DEventMap } from 'three';
+import {
+    PerspectiveCamera,
+    Scene,
+    WebGLRenderer,
+    TextureLoader,
+    LoadingManager,
+    GridHelper,
+    DirectionalLight,
+    Clock,
+    AmbientLight,
+    SphereGeometry,
+    Mesh,
+    MeshBasicMaterial,
+    Raycaster,
+    Vector3,
+    Vector2,
+    Group,
+    type Object3DEventMap,
+} from 'three';
 
 import './style.css';
 import GUI from 'lil-gui';
-import { GLTFLoader, Timer, type GLTF } from 'three/examples/jsm/Addons.js';
+import { GLTFLoader, Timer } from 'three/examples/jsm/Addons.js';
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
 
 const scene = new Scene();
 
 // DEBUG
 const gui = new GUI();
-const params: Record<string, any> = {
-};
 
 // OBJECTS
-const object1 = new Mesh(
-    new SphereGeometry(0.5, 16, 16),
-    new MeshBasicMaterial({ color: 'red' }),
-);
+const object1 = new Mesh(new SphereGeometry(0.5, 16, 16), new MeshBasicMaterial({ color: 'red' }));
 object1.position.x = -2;
-const object2 = new Mesh(
-    new SphereGeometry(0.5, 16, 16),
-    new MeshBasicMaterial({ color: 'red' }),
-);
-const object3 = new Mesh(
-    new SphereGeometry(0.5, 16, 16),
-    new MeshBasicMaterial({ color: 'red' }),
-);
+const object2 = new Mesh(new SphereGeometry(0.5, 16, 16), new MeshBasicMaterial({ color: 'red' }));
+const object3 = new Mesh(new SphereGeometry(0.5, 16, 16), new MeshBasicMaterial({ color: 'red' }));
 object3.position.x = 2;
 
 scene.add(object1, object2, object3);
 
 // RAYCASTER
 const raycaster = new Raycaster();
-raycaster.set(
-    new Vector3(-3, 0, 0),
-    new Vector3(10, 0, 0).normalize(),
-);
+raycaster.set(new Vector3(-3, 0, 0), new Vector3(10, 0, 0).normalize());
 
 const intersect = raycaster.intersectObject(object2);
 const intersects = raycaster.intersectObjects([object1, object2, object3]);
@@ -76,7 +80,6 @@ gui.add(gridHelper, 'visible').name('Show Grid Helper');
 
 // TEXTURES
 const loadingManager = new LoadingManager(console.log, undefined, console.error);
-const textureLoader = new TextureLoader(loadingManager);
 
 // EVENTS
 window.addEventListener('resize', () => {
@@ -87,8 +90,8 @@ window.addEventListener('resize', () => {
 
 const mouse = new Vector2();
 window.addEventListener('mousemove', (event) => {
-    mouse.x = (event.clientX / innerWidth * 2) - 1;
-    mouse.y = -(event.clientY / innerHeight * 2) + 1;
+    mouse.x = (event.clientX / innerWidth) * 2 - 1;
+    mouse.y = -((event.clientY / innerHeight) * 2) + 1;
 });
 
 let currentIntersect: ReturnType<typeof raycaster.intersectObjects> | null = null;
@@ -102,26 +105,21 @@ window.addEventListener('click', () => {
 document.body.appendChild(renderer.domElement);
 
 const timer = new Timer();
-const clock = new Clock();
 let previousTime = 0;
 
 // MODEL
 const gltfLoader = new GLTFLoader(loadingManager);
 let model: Group<Object3DEventMap> | null = null;
-gltfLoader.load(
-    '/models/Duck/glTF-Binary/Duck.glb',
-    (gltf) => {
-        model = gltf.scene;
-        gltf.scene.position.y = -1.2;
-        scene.add(gltf.scene);
-    }
-);
+gltfLoader.load('/models/Duck/glTF-Binary/Duck.glb', (gltf) => {
+    model = gltf.scene;
+    gltf.scene.position.y = -1.2;
+    scene.add(gltf.scene);
+});
 
 // NOTE: just started 'Using a Library' section of video at end of lunch
 function animate() {
     timer.update();
     const elapsedTime = timer.getElapsed();
-    const deltaTime = elapsedTime - previousTime;
     previousTime = elapsedTime;
 
     object1.position.y = Math.sin(elapsedTime);

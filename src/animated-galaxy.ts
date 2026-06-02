@@ -1,4 +1,16 @@
-import { AmbientLight, PerspectiveCamera, Scene, WebGLRenderer, TextureLoader, LoadingManager, PointsMaterial, Points, BufferGeometry, BufferAttribute, GridHelper, AdditiveBlending, Color, ShaderMaterial } from 'three';
+import {
+    AmbientLight,
+    PerspectiveCamera,
+    Scene,
+    WebGLRenderer,
+    Points,
+    BufferGeometry,
+    BufferAttribute,
+    GridHelper,
+    AdditiveBlending,
+    Color,
+    ShaderMaterial,
+} from 'three';
 
 import './style.css';
 import GUI from 'lil-gui';
@@ -85,12 +97,15 @@ function generateGalaxy() {
 
         const radius = Math.random() * params.radius;
 
-        const branchAngle = (i % params.branches) / params.branches * (Math.PI * 2);
+        const branchAngle = ((i % params.branches) / params.branches) * (Math.PI * 2);
         // const spinAngle = radius * params.spin;
 
-        const randomX = Math.pow(Math.random(), params.randomnessPower) * (Math.random() < 0.5 ? 1 : -1);
-        const randomY = Math.pow(Math.random(), params.randomnessPower) * (Math.random() < 0.5 ? 1 : -1);
-        const randomZ = Math.pow(Math.random(), params.randomnessPower) * (Math.random() < 0.5 ? 1 : -1);
+        const randomX =
+            Math.pow(Math.random(), params.randomnessPower) * (Math.random() < 0.5 ? 1 : -1);
+        const randomY =
+            Math.pow(Math.random(), params.randomnessPower) * (Math.random() < 0.5 ? 1 : -1);
+        const randomZ =
+            Math.pow(Math.random(), params.randomnessPower) * (Math.random() < 0.5 ? 1 : -1);
 
         randomness[i3 + 0] = randomX;
         randomness[i3 + 1] = randomY;
@@ -108,25 +123,13 @@ function generateGalaxy() {
         colors[i3 + 2] = mixedColor.b;
         scales[i] = Math.random();
     }
-    geometry.setAttribute(
-        'position',
-        new BufferAttribute(positions, 3),
-    );
+    geometry.setAttribute('position', new BufferAttribute(positions, 3));
 
-    geometry.setAttribute(
-        'aScale',
-        new BufferAttribute(scales, 1),
-    );
+    geometry.setAttribute('aScale', new BufferAttribute(scales, 1));
 
-    geometry.setAttribute(
-        'color',
-        new BufferAttribute(colors, 3),
-    );
+    geometry.setAttribute('color', new BufferAttribute(colors, 3));
 
-    geometry.setAttribute(
-        'aRandomness',
-        new BufferAttribute(randomness, 3),
-    );
+    geometry.setAttribute('aRandomness', new BufferAttribute(randomness, 3));
 
     material = new ShaderMaterial({
         depthWrite: false,

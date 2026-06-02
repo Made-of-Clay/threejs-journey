@@ -1,6 +1,16 @@
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
 import './style.css';
-import { AmbientLight, AxesHelper, BufferAttribute, BufferGeometry, Mesh, MeshBasicMaterial, PerspectiveCamera, Scene, WebGLRenderer } from 'three';
+import {
+    AmbientLight,
+    AxesHelper,
+    BufferAttribute,
+    BufferGeometry,
+    Mesh,
+    MeshBasicMaterial,
+    PerspectiveCamera,
+    Scene,
+    WebGLRenderer,
+} from 'three';
 
 const scene = new Scene();
 
@@ -22,11 +32,7 @@ const axesHelper = new AxesHelper(5);
 scene.add(axesHelper);
 
 // SHAPE
-const positionsArray = new Float32Array([
-    0, 0, 0,
-    0, 1, 0,
-    1, 0, 0
-]);
+const positionsArray = new Float32Array([0, 0, 0, 0, 1, 0, 1, 0, 0]);
 const positionsAttr = new BufferAttribute(positionsArray, 3);
 const geo1 = new BufferGeometry();
 geo1.setAttribute('position', positionsAttr);
@@ -50,7 +56,7 @@ cube.position.y = 0;
 scene.add(cube);
 
 // LIGHT
-const color = 0xFFFFFF;
+const color = 0xffffff;
 const intensity = 1;
 const light = new AmbientLight(color, intensity);
 scene.add(light);

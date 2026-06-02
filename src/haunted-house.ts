@@ -1,4 +1,24 @@
-import { Mesh, AmbientLight, PerspectiveCamera, Scene, WebGLRenderer, Clock, AxesHelper, TextureLoader, SRGBColorSpace, SphereGeometry, MeshStandardMaterial, DirectionalLight, CameraHelper, PlaneGeometry, BoxGeometry, ConeGeometry, LoadingManager, RepeatWrapping, PointLight, PCFSoftShadowMap, Fog, FogExp2 } from 'three'
+import {
+    Mesh,
+    AmbientLight,
+    PerspectiveCamera,
+    Scene,
+    WebGLRenderer,
+    TextureLoader,
+    SRGBColorSpace,
+    SphereGeometry,
+    MeshStandardMaterial,
+    DirectionalLight,
+    CameraHelper,
+    PlaneGeometry,
+    BoxGeometry,
+    ConeGeometry,
+    LoadingManager,
+    RepeatWrapping,
+    PointLight,
+    PCFSoftShadowMap,
+    FogExp2,
+} from 'three';
 
 import './style.css';
 import GUI from 'lil-gui';
@@ -9,7 +29,6 @@ const scene = new Scene();
 
 // DEBUG
 const gui = new GUI();
-const debugObject: Record<string, any> = {};
 
 // RENDERER
 const renderer = new WebGLRenderer();
@@ -52,10 +71,18 @@ const loadingManager = new LoadingManager(console.log, undefined, console.error)
 const textureLoader = new TextureLoader(loadingManager);
 
 const floorAlphaTexture = textureLoader.load('/haunted-house/floor/alpha.webp');
-const floorColorTexture = textureLoader.load('/haunted-house/floor/coastSandRocks2/coast_sand_rocks_02_diff_1k.webp');
-const floorARMTexture = textureLoader.load('/haunted-house/floor/coastSandRocks2/coast_sand_rocks_02_arm_1k.webp');
-const floorNormalTexture = textureLoader.load('/haunted-house/floor/coastSandRocks2/coast_sand_rocks_02_nor_gl_1k.webp');
-const floorDisplacementTexture = textureLoader.load('/haunted-house/floor/coastSandRocks2/coast_sand_rocks_02_disp_1k.webp');
+const floorColorTexture = textureLoader.load(
+    '/haunted-house/floor/coastSandRocks2/coast_sand_rocks_02_diff_1k.webp',
+);
+const floorARMTexture = textureLoader.load(
+    '/haunted-house/floor/coastSandRocks2/coast_sand_rocks_02_arm_1k.webp',
+);
+const floorNormalTexture = textureLoader.load(
+    '/haunted-house/floor/coastSandRocks2/coast_sand_rocks_02_nor_gl_1k.webp',
+);
+const floorDisplacementTexture = textureLoader.load(
+    '/haunted-house/floor/coastSandRocks2/coast_sand_rocks_02_disp_1k.webp',
+);
 floorColorTexture.repeat.set(8, 8);
 floorARMTexture.repeat.set(8, 8);
 floorNormalTexture.repeat.set(8, 8);
@@ -73,14 +100,26 @@ floorARMTexture.wrapT = RepeatWrapping;
 floorNormalTexture.wrapT = RepeatWrapping;
 floorDisplacementTexture.wrapT = RepeatWrapping;
 
-const wallColorTexture = textureLoader.load('/haunted-house/wall/castle_brick_broken_06_1k/castle_brick_broken_06_diff_1k.webp');
-const wallARMTexture = textureLoader.load('/haunted-house/wall/castle_brick_broken_06_1k/castle_brick_broken_06_arm_1k.webp');
-const wallNormalTexture = textureLoader.load('/haunted-house/wall/castle_brick_broken_06_1k/castle_brick_broken_06_nor_gl_1k.webp');
+const wallColorTexture = textureLoader.load(
+    '/haunted-house/wall/castle_brick_broken_06_1k/castle_brick_broken_06_diff_1k.webp',
+);
+const wallARMTexture = textureLoader.load(
+    '/haunted-house/wall/castle_brick_broken_06_1k/castle_brick_broken_06_arm_1k.webp',
+);
+const wallNormalTexture = textureLoader.load(
+    '/haunted-house/wall/castle_brick_broken_06_1k/castle_brick_broken_06_nor_gl_1k.webp',
+);
 wallColorTexture.colorSpace = SRGBColorSpace;
 
-const roofColorTexture = textureLoader.load('/haunted-house/roof/roof_slates_02_1k/roof_slates_02_diff_1k.webp');
-const roofARMTexture = textureLoader.load('/haunted-house/roof/roof_slates_02_1k/roof_slates_02_arm_1k.webp');
-const roofNormalTexture = textureLoader.load('/haunted-house/roof/roof_slates_02_1k/roof_slates_02_nor_gl_1k.webp');
+const roofColorTexture = textureLoader.load(
+    '/haunted-house/roof/roof_slates_02_1k/roof_slates_02_diff_1k.webp',
+);
+const roofARMTexture = textureLoader.load(
+    '/haunted-house/roof/roof_slates_02_1k/roof_slates_02_arm_1k.webp',
+);
+const roofNormalTexture = textureLoader.load(
+    '/haunted-house/roof/roof_slates_02_1k/roof_slates_02_nor_gl_1k.webp',
+);
 roofColorTexture.colorSpace = SRGBColorSpace;
 
 roofColorTexture.repeat.set(3, 1);
@@ -90,9 +129,15 @@ roofColorTexture.wrapS = RepeatWrapping;
 roofARMTexture.wrapS = RepeatWrapping;
 roofNormalTexture.wrapS = RepeatWrapping;
 
-const bushColorTexture = textureLoader.load('/haunted-house/bush/leaves_forest_ground_1k/leaves_forest_ground_diff_1k.webp');
-const bushARMTexture = textureLoader.load('/haunted-house/bush/leaves_forest_ground_1k/leaves_forest_ground_arm_1k.webp');
-const bushNormalTexture = textureLoader.load('/haunted-house/bush/leaves_forest_ground_1k/leaves_forest_ground_nor_gl_1k.webp');
+const bushColorTexture = textureLoader.load(
+    '/haunted-house/bush/leaves_forest_ground_1k/leaves_forest_ground_diff_1k.webp',
+);
+const bushARMTexture = textureLoader.load(
+    '/haunted-house/bush/leaves_forest_ground_1k/leaves_forest_ground_arm_1k.webp',
+);
+const bushNormalTexture = textureLoader.load(
+    '/haunted-house/bush/leaves_forest_ground_1k/leaves_forest_ground_nor_gl_1k.webp',
+);
 bushColorTexture.colorSpace = SRGBColorSpace;
 
 bushColorTexture.repeat.set(3, 1);
@@ -102,9 +147,15 @@ bushColorTexture.wrapS = RepeatWrapping;
 bushARMTexture.wrapS = RepeatWrapping;
 bushNormalTexture.wrapS = RepeatWrapping;
 
-const graveColorTexture = textureLoader.load('/haunted-house/grave/plastered_stone_wall_1k/plastered_stone_wall_diff_1k.webp');
-const graveARMTexture = textureLoader.load('/haunted-house/grave/plastered_stone_wall_1k/plastered_stone_wall_arm_1k.webp');
-const graveNormalTexture = textureLoader.load('/haunted-house/grave/plastered_stone_wall_1k/plastered_stone_wall_nor_gl_1k.webp');
+const graveColorTexture = textureLoader.load(
+    '/haunted-house/grave/plastered_stone_wall_1k/plastered_stone_wall_diff_1k.webp',
+);
+const graveARMTexture = textureLoader.load(
+    '/haunted-house/grave/plastered_stone_wall_1k/plastered_stone_wall_arm_1k.webp',
+);
+const graveNormalTexture = textureLoader.load(
+    '/haunted-house/grave/plastered_stone_wall_1k/plastered_stone_wall_nor_gl_1k.webp',
+);
 graveColorTexture.colorSpace = SRGBColorSpace;
 
 graveColorTexture.repeat.set(0.3, 0.4);
@@ -137,14 +188,22 @@ const floor = new Mesh(
         normalMap: floorNormalTexture,
         displacementMap: floorDisplacementTexture,
         displacementScale: 0.088,
-        displacementBias: -0.175
+        displacementBias: -0.175,
     }),
 );
 floor.rotation.x = -Math.PI / 2;
 scene.add(floor);
 
-gui.add(floor.material, 'displacementScale').min(0).max(1).step(0.001).name('Floor Displacement Scale');
-gui.add(floor.material, 'displacementBias').min(-1).max(1).step(0.001).name('Floor Displacement Bias');
+gui.add(floor.material, 'displacementScale')
+    .min(0)
+    .max(1)
+    .step(0.001)
+    .name('Floor Displacement Scale');
+gui.add(floor.material, 'displacementBias')
+    .min(-1)
+    .max(1)
+    .step(0.001)
+    .name('Floor Displacement Bias');
 
 const house = new Group();
 scene.add(house);
@@ -207,25 +266,25 @@ const bushMat = new MeshStandardMaterial({
 const bush1 = new Mesh(bushGeo, bushMat);
 bush1.scale.set(0.5, 0.5, 0.5);
 bush1.position.set(0.8, 0.2, 2.2);
-bush1.rotation.x = -0.75
+bush1.rotation.x = -0.75;
 house.add(bush1);
 
 const bush2 = new Mesh(bushGeo, bushMat);
 bush2.scale.set(0.25, 0.25, 0.25);
 bush2.position.set(1.4, 0.1, 2.1);
-bush2.rotation.x = -0.75
+bush2.rotation.x = -0.75;
 house.add(bush2);
 
 const bush3 = new Mesh(bushGeo, bushMat);
 bush3.scale.set(0.4, 0.4, 0.4);
 bush3.position.set(-0.8, 0.1, 2.2);
-bush3.rotation.x = -0.75
+bush3.rotation.x = -0.75;
 house.add(bush3);
 
 const bush4 = new Mesh(bushGeo, bushMat);
 bush4.scale.set(0.15, 0.15, 0.15);
 bush4.position.set(-1, 0.05, 2.6);
-bush4.rotation.x = -0.75
+bush4.rotation.x = -0.75;
 house.add(bush4);
 
 const graveGeo = new BoxGeometry(0.6, 0.8, 0.2);
@@ -299,17 +358,20 @@ function animate() {
     const ghost1Angle = elapsedTime * 0.5;
     ghost1.position.x = Math.cos(ghost1Angle) * 4;
     ghost1.position.z = Math.sin(ghost1Angle) * 4;
-    ghost1.position.y = Math.sin(ghost1Angle) * Math.sin(ghost1Angle * 2.34) * Math.sin(ghost1Angle * 3.45);
+    ghost1.position.y =
+        Math.sin(ghost1Angle) * Math.sin(ghost1Angle * 2.34) * Math.sin(ghost1Angle * 3.45);
 
     const ghost2Angle = -elapsedTime * 0.38;
     ghost2.position.x = Math.cos(ghost2Angle) * 5;
     ghost2.position.z = Math.sin(ghost2Angle) * 5;
-    ghost2.position.y = Math.sin(ghost2Angle) * Math.sin(ghost2Angle * 2.34) * Math.sin(ghost2Angle * 3.45);
+    ghost2.position.y =
+        Math.sin(ghost2Angle) * Math.sin(ghost2Angle * 2.34) * Math.sin(ghost2Angle * 3.45);
 
     const ghost3Angle = elapsedTime * 0.25;
     ghost3.position.x = Math.cos(ghost3Angle) * 6;
     ghost3.position.z = Math.sin(ghost3Angle) * 6;
-    ghost3.position.y = Math.sin(ghost3Angle) * Math.sin(ghost3Angle * 2.34) * Math.sin(ghost3Angle * 3.45);
+    ghost3.position.y =
+        Math.sin(ghost3Angle) * Math.sin(ghost3Angle * 2.34) * Math.sin(ghost3Angle * 3.45);
 
     for (const grave of graves.children) {
         grave.castShadow = true;

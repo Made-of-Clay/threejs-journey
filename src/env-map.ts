@@ -1,33 +1,44 @@
-import { PerspectiveCamera, Scene, WebGLRenderer, TextureLoader, LoadingManager, GridHelper, DirectionalLight, Clock, AmbientLight, SphereGeometry, Mesh, MeshBasicMaterial, Raycaster, Vector3, Vector2, Group, type Object3DEventMap, TorusKnotGeometry, CubeTextureLoader, MeshStandardMaterial, EquirectangularReflectionMapping, SRGBColorSpace, TorusGeometry, WebGLCubeRenderTarget, FloatType, HalfFloatType, CubeCamera, Color } from 'three';
+import {
+    PerspectiveCamera,
+    Scene,
+    WebGLRenderer,
+    TextureLoader,
+    LoadingManager,
+    GridHelper,
+    DirectionalLight,
+    AmbientLight,
+    Mesh,
+    MeshBasicMaterial,
+    TorusKnotGeometry,
+    MeshStandardMaterial,
+    EquirectangularReflectionMapping,
+    SRGBColorSpace,
+    TorusGeometry,
+    WebGLCubeRenderTarget,
+    HalfFloatType,
+    CubeCamera,
+    Color,
+} from 'three';
 
 import './style.css';
 import GUI from 'lil-gui';
-import { EXRLoader, GLTFLoader, GroundedSkybox, RGBELoader, Timer, type GLTF } from 'three/examples/jsm/Addons.js';
-import { OrbitControls } from 'three/examples/jsm/Addons.js';
-import { TorusKnot } from 'three/examples/jsm/curves/CurveExtras.js';
+import { GLTFLoader, OrbitControls } from 'three/examples/jsm/Addons.js';
+import { Timer } from 'three';
 
 const scene = new Scene();
 
 // DEBUG
 const gui = new GUI();
-const params: Record<string, any> = {
-};
 
 // TEXTURES
 const loadingManager = new LoadingManager(console.log, undefined, console.error);
 const textureLoader = new TextureLoader(loadingManager);
 const gltfLoader = new GLTFLoader(loadingManager);
-const cubeTextureLoader = new CubeTextureLoader(loadingManager);
-const rgbeLoader = new RGBELoader(loadingManager);
-const exrLoader = new EXRLoader(loadingManager);
 
-gltfLoader.load(
-    'models/FlightHelmet/glTF/FlightHelmet.gltf',
-    (gltf) => {
-        gltf.scene.scale.set(10, 10, 10);
-        scene.add(gltf.scene);
-    }
-);
+gltfLoader.load('models/FlightHelmet/glTF/FlightHelmet.gltf', (gltf) => {
+    gltf.scene.scale.set(10, 10, 10);
+    scene.add(gltf.scene);
+});
 
 // ENVIRONMENT MAP
 // KDR cube texture
@@ -74,7 +85,9 @@ gltfLoader.load(
 // });
 
 // REAL TIME ENV MAP
-const envMap = textureLoader.load('/environmentMaps/blockadesLabsSkybox/interior_views_cozy_wood_cabin_with_cauldron_and_p.jpg');
+const envMap = textureLoader.load(
+    '/environmentMaps/blockadesLabsSkybox/interior_views_cozy_wood_cabin_with_cauldron_and_p.jpg',
+);
 envMap.mapping = EquirectangularReflectionMapping;
 envMap.colorSpace = SRGBColorSpace;
 scene.background = envMap;
@@ -102,8 +115,16 @@ scene.backgroundIntensity = 1;
 gui.add(scene, 'environmentIntensity').min(0).max(10).step(0.001);
 gui.add(scene, 'backgroundBlurriness').min(0).max(1).step(0.001);
 gui.add(scene, 'backgroundIntensity').min(0).max(10).step(0.001);
-gui.add(scene.backgroundRotation, 'y').min(0).max(Math.PI * 2).step(0.001).name('Background Rotation');
-gui.add(scene.environmentRotation, 'y').min(0).max(Math.PI * 2).step(0.001).name('Environment Rotation');
+gui.add(scene.backgroundRotation, 'y')
+    .min(0)
+    .max(Math.PI * 2)
+    .step(0.001)
+    .name('Background Rotation');
+gui.add(scene.environmentRotation, 'y')
+    .min(0)
+    .max(Math.PI * 2)
+    .step(0.001)
+    .name('Environment Rotation');
 
 // OBJECTS
 const torusKnot = new Mesh(
@@ -150,15 +171,11 @@ gui.add(gridHelper, 'visible').name('Show Grid Helper');
 document.body.appendChild(renderer.domElement);
 
 const timer = new Timer();
-const clock = new Clock();
-let previousTime = 0;
 
 // NOTE: just started 'Using a Library' section of video at end of lunch
 function animate() {
     timer.update();
     const elapsedTime = timer.getElapsed();
-    const deltaTime = elapsedTime - previousTime;
-    previousTime = elapsedTime;
 
     // Real time env map
     if (holyDonut) {

@@ -1,4 +1,24 @@
-import { PerspectiveCamera, Scene, WebGLRenderer, TextureLoader, LoadingManager, GridHelper, Mesh, TorusGeometry, ConeGeometry, TorusKnotGeometry, MeshToonMaterial, DirectionalLight, NearestFilter, Group, Clock, BufferGeometry, BufferAttribute, PointsMaterial, Points } from 'three';
+import {
+    PerspectiveCamera,
+    Scene,
+    WebGLRenderer,
+    TextureLoader,
+    LoadingManager,
+    GridHelper,
+    Mesh,
+    TorusGeometry,
+    ConeGeometry,
+    TorusKnotGeometry,
+    MeshToonMaterial,
+    DirectionalLight,
+    NearestFilter,
+    Group,
+    Clock,
+    BufferGeometry,
+    BufferAttribute,
+    PointsMaterial,
+    Points,
+} from 'three';
 
 import './style.css';
 import GUI from 'lil-gui';
@@ -55,18 +75,9 @@ const material = new MeshToonMaterial({
     gradientMap: gradientTexture,
 });
 const objectDistance = 5;
-const mesh1 = new Mesh(
-    new TorusGeometry(1, 0.4, 16, 60),
-    material,
-);
-const mesh2 = new Mesh(
-    new ConeGeometry(1, 2, 32),
-    material,
-);
-const mesh3 = new Mesh(
-    new TorusKnotGeometry(0.8, 0.35, 100, 16),
-    material,
-);
+const mesh1 = new Mesh(new TorusGeometry(1, 0.4, 16, 60), material);
+const mesh2 = new Mesh(new ConeGeometry(1, 2, 32), material);
+const mesh3 = new Mesh(new TorusKnotGeometry(0.8, 0.35, 100, 16), material);
 
 mesh1.position.y = objectDistance * 0;
 mesh2.position.y = objectDistance * -1;
@@ -81,14 +92,12 @@ const particlesCount = 200;
 const positions = new Float32Array(particlesCount * 3);
 for (let i = 0; i < particlesCount; i++) {
     positions[i * 3 + 0] = (Math.random() - 0.5) * 10;
-    positions[i * 3 + 1] = Math.random() * 0.4 - Math.random() * objectDistance * sectionMeshes.length;
+    positions[i * 3 + 1] =
+        Math.random() * 0.4 - Math.random() * objectDistance * sectionMeshes.length;
     positions[i * 3 + 2] = (Math.random() - 0.5) * 10;
 }
 const particlesGeometry = new BufferGeometry();
-particlesGeometry.setAttribute(
-    'position',
-    new BufferAttribute(positions, 3)
-);
+particlesGeometry.setAttribute('position', new BufferAttribute(positions, 3));
 
 const particlesMaterial = new PointsMaterial({
     color: params.materialColor,
@@ -111,17 +120,14 @@ window.addEventListener('scroll', () => {
     const newSection = Math.round(scrollY / window.innerHeight);
     if (currentSection != newSection) {
         currentSection = newSection;
-        console.log({currentSection});
-        gsap.to(
-            sectionMeshes[currentSection].rotation,
-            {
-                duration: 1.5,
-                ease: 'power2.inOut',
-                x: '+=6',
-                y: '+=3',
-                z: '+=1.5',
-            }
-        );
+        console.log({ currentSection });
+        gsap.to(sectionMeshes[currentSection].rotation, {
+            duration: 1.5,
+            ease: 'power2.inOut',
+            x: '+=6',
+            y: '+=3',
+            z: '+=1.5',
+        });
     }
 });
 
@@ -133,7 +139,6 @@ window.addEventListener('mousemove', (event) => {
 });
 
 const timer = new Timer();
-const clock = new Clock();
 let previousTime = 0;
 
 // NOTE: just started 'Using a Library' section of video at end of lunch

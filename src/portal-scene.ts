@@ -1,9 +1,29 @@
-import { PerspectiveCamera, Scene, WebGLRenderer, GridHelper, DirectionalLight, Mesh, AxesHelper, TextureLoader, PCFShadowMap, ReinhardToneMapping, MeshBasicMaterial, LoadingManager, SRGBColorSpace, BufferGeometry, BufferAttribute, PointsMaterial, Points, ShaderMaterial, AdditiveBlending, Color } from 'three';
+import {
+    PerspectiveCamera,
+    Scene,
+    WebGLRenderer,
+    GridHelper,
+    DirectionalLight,
+    Mesh,
+    AxesHelper,
+    TextureLoader,
+    PCFShadowMap,
+    ReinhardToneMapping,
+    MeshBasicMaterial,
+    LoadingManager,
+    SRGBColorSpace,
+    BufferGeometry,
+    BufferAttribute,
+    Points,
+    ShaderMaterial,
+    AdditiveBlending,
+    Color,
+} from 'three';
 
 import './style.css';
 import GUI from 'lil-gui';
-import { DRACOLoader, GLTFLoader, Timer } from 'three/examples/jsm/Addons.js';
-import { OrbitControls } from 'three/examples/jsm/Addons.js';
+import { DRACOLoader, GLTFLoader, OrbitControls } from 'three/examples/jsm/Addons.js';
+import { Timer } from 'three';
 import firefliesVertexShader from './shaders/fireflies/vertex.glsl?raw';
 import firefliesFragmentShader from './shaders/fireflies/fragment.glsl?raw';
 import portalVertexShader from './shaders/portal/vertex.glsl?raw';
@@ -31,7 +51,6 @@ gui.addColor(params, 'clearColor').onChange(() => {
 });
 
 // LOADERS
-let isSceneReady = false;
 const loadingManager = new LoadingManager(console.log, undefined, console.error);
 // const cubeTextureLoader = new CubeTextureLoader();
 
@@ -89,20 +108,17 @@ gui.addColor(params, 'portalColorEnd').onChange(() => {
 /**
  * Models
  */
-gltfLoader.load(
-    '/portal/portal.glb',
-    (gltf) => {
-        const bakedMesh = gltf.scene.getObjectByName('Baked') as Mesh;
-        const poleLight1 = gltf.scene.getObjectByName('Light001') as Mesh;
-        const poleLight2 = gltf.scene.getObjectByName('Light003') as Mesh;
-        const portalLight = gltf.scene.getObjectByName('Gateway') as Mesh;
-        bakedMesh.material = bakedMaterial;
-        poleLight1.material = poleLightMaterial;
-        poleLight2.material = poleLightMaterial;
-        portalLight.material = portalLightMaterial;
-        scene.add(gltf.scene);
-    }
-);
+gltfLoader.load('/portal/portal.glb', (gltf) => {
+    const bakedMesh = gltf.scene.getObjectByName('Baked') as Mesh;
+    const poleLight1 = gltf.scene.getObjectByName('Light001') as Mesh;
+    const poleLight2 = gltf.scene.getObjectByName('Light003') as Mesh;
+    const portalLight = gltf.scene.getObjectByName('Gateway') as Mesh;
+    bakedMesh.material = bakedMaterial;
+    poleLight1.material = poleLightMaterial;
+    poleLight2.material = poleLightMaterial;
+    portalLight.material = portalLightMaterial;
+    scene.add(gltf.scene);
+});
 
 /**
  * Fireflies
@@ -114,7 +130,7 @@ const scaleArray = new Float32Array(firefliesCount);
 
 for (let i = 0; i < firefliesCount; i++) {
     positionArray[i * 3 + 0] = (Math.random() - 0.5) * 4;
-    positionArray[i * 3 + 1] = (Math.random() * 0.5) * 4;
+    positionArray[i * 3 + 1] = Math.random() * 0.5 * 4;
     positionArray[i * 3 + 2] = (Math.random() - 0.5) * 4;
 
     scaleArray[i] = Math.random();
@@ -148,7 +164,7 @@ directionalLight.castShadow = true;
 directionalLight.shadow.mapSize.set(1024, 1024);
 directionalLight.shadow.camera.far = 15;
 directionalLight.shadow.normalBias = 0.05;
-directionalLight.position.set(0.25, 3, - 2.25);
+directionalLight.position.set(0.25, 3, -2.25);
 scene.add(directionalLight);
 
 const sizes = {

@@ -1,6 +1,14 @@
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
 import './style.css';
-import { AmbientLight, BoxGeometry, Mesh, MeshBasicMaterial, PerspectiveCamera, Scene, WebGLRenderer } from 'three';
+import {
+    AmbientLight,
+    BoxGeometry,
+    Mesh,
+    MeshBasicMaterial,
+    PerspectiveCamera,
+    Scene,
+    WebGLRenderer,
+} from 'three';
 import GUI from 'lil-gui';
 import { gsap } from 'gsap';
 
@@ -36,7 +44,8 @@ const cubeTweaks = gui.addFolder('Cube');
 cubeTweaks.add(cube.position, 'y').min(-3).max(3).step(0.1).name('Cube Y');
 cubeTweaks.add(cube, 'visible').name('Cube Visible');
 cubeTweaks.add(material, 'wireframe').name('Cube Wireframe');
-cubeTweaks.addColor(debugObject, 'color')
+cubeTweaks
+    .addColor(debugObject, 'color')
     .name('Cube Color')
     .onChange((newColor: string) => {
         console.log('color changed', newColor);
@@ -45,19 +54,30 @@ cubeTweaks.addColor(debugObject, 'color')
 
 debugObject.spin = () => {
     gsap.to(cube.rotation, { y: cube.rotation.y + Math.PI * 2, duration: 1 });
-}
+};
 gui.add(debugObject, 'spin').name('Spin Cube');
 
 debugObject.subdivision = 2;
-gui.add(debugObject, 'subdivision').min(1).max(10).step(1).name('Cube Subdivision')
+gui.add(debugObject, 'subdivision')
+    .min(1)
+    .max(10)
+    .step(1)
+    .name('Cube Subdivision')
     .onFinishChange(() => {
         console.log('cube subdiv finish changed');
         cube.geometry.dispose();
-        cube.geometry = new BoxGeometry(1, 1, 1, debugObject.subdivision, debugObject.subdivision, debugObject.subdivision);
+        cube.geometry = new BoxGeometry(
+            1,
+            1,
+            1,
+            debugObject.subdivision,
+            debugObject.subdivision,
+            debugObject.subdivision,
+        );
     });
 
 // LIGHT
-const color = 0xFFFFFF;
+const color = 0xffffff;
 const intensity = 1;
 const light = new AmbientLight(color, intensity);
 scene.add(light);

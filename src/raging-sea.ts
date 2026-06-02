@@ -1,4 +1,17 @@
-import { PerspectiveCamera, Scene, WebGLRenderer, GridHelper, DirectionalLight, Clock, Mesh, PlaneGeometry, MeshStandardMaterial, AxesHelper, RawShaderMaterial, BufferAttribute, BufferGeometry, Vector2, Color, TextureLoader, LoadingManager, ShaderMaterial, MeshBasicMaterial } from 'three';
+import {
+    PerspectiveCamera,
+    Scene,
+    WebGLRenderer,
+    GridHelper,
+    DirectionalLight,
+    Clock,
+    Mesh,
+    PlaneGeometry,
+    AxesHelper,
+    Vector2,
+    Color,
+    ShaderMaterial,
+} from 'three';
 
 import './style.css';
 import GUI from 'lil-gui';
@@ -87,23 +100,63 @@ const waterMat = new ShaderMaterial({
     },
 });
 
-gui.add(waterMat.uniforms.uBigWavesElevation, 'value').min(0).max(1).step(0.001).name('Big Waves Elevation');
-gui.add(waterMat.uniforms.uBigWavesFrequency.value, 'x').min(0).max(10).step(0.001).name('Big Waves Frequency X');
-gui.add(waterMat.uniforms.uBigWavesFrequency.value, 'y').min(0).max(10).step(0.001).name('Big Waves Frequency Y');
-gui.add(waterMat.uniforms.uBigWavesSpeed, 'value').min(0).max(4).step(0.001).name('Big Waves Speed');
-gui.addColor(params, 'depthColor').name('Depth Color').onChange(() => {
-    waterMat.uniforms.uDepthColor.value.set(params.depthColor);
-});
-gui.addColor(params, 'surfaceColor').name('Surface Color').onChange(() => {
-    waterMat.uniforms.uSurfaceColor.value.set(params.surfaceColor);
-});;
+gui.add(waterMat.uniforms.uBigWavesElevation, 'value')
+    .min(0)
+    .max(1)
+    .step(0.001)
+    .name('Big Waves Elevation');
+gui.add(waterMat.uniforms.uBigWavesFrequency.value, 'x')
+    .min(0)
+    .max(10)
+    .step(0.001)
+    .name('Big Waves Frequency X');
+gui.add(waterMat.uniforms.uBigWavesFrequency.value, 'y')
+    .min(0)
+    .max(10)
+    .step(0.001)
+    .name('Big Waves Frequency Y');
+gui.add(waterMat.uniforms.uBigWavesSpeed, 'value')
+    .min(0)
+    .max(4)
+    .step(0.001)
+    .name('Big Waves Speed');
+gui.addColor(params, 'depthColor')
+    .name('Depth Color')
+    .onChange(() => {
+        waterMat.uniforms.uDepthColor.value.set(params.depthColor);
+    });
+gui.addColor(params, 'surfaceColor')
+    .name('Surface Color')
+    .onChange(() => {
+        waterMat.uniforms.uSurfaceColor.value.set(params.surfaceColor);
+    });
 gui.add(waterMat.uniforms.uColorOffset, 'value').min(0).max(1).step(0.001).name('Color Offset');
-gui.add(waterMat.uniforms.uColorMultiplier, 'value').min(0).max(10).step(0.001).name('Color Multiplier');
+gui.add(waterMat.uniforms.uColorMultiplier, 'value')
+    .min(0)
+    .max(10)
+    .step(0.001)
+    .name('Color Multiplier');
 
-gui.add(waterMat.uniforms.uSmallWavesElevation, 'value').min(0).max(1).step(0.001).name('uSmallWavesElevation');
-gui.add(waterMat.uniforms.uSmallWavesFrequency, 'value').min(0).max(30).step(0.001).name('uSmallWavesFrequency');
-gui.add(waterMat.uniforms.uSmallWavesSpeed, 'value').min(0).max(4).step(0.001).name('uSmallWavesSpeed');
-gui.add(waterMat.uniforms.uSmallIterations, 'value').min(0).max(5).step(0.001).name('uSmallIterations');
+gui.add(waterMat.uniforms.uSmallWavesElevation, 'value')
+    .min(0)
+    .max(1)
+    .step(0.001)
+    .name('uSmallWavesElevation');
+gui.add(waterMat.uniforms.uSmallWavesFrequency, 'value')
+    .min(0)
+    .max(30)
+    .step(0.001)
+    .name('uSmallWavesFrequency');
+gui.add(waterMat.uniforms.uSmallWavesSpeed, 'value')
+    .min(0)
+    .max(4)
+    .step(0.001)
+    .name('uSmallWavesSpeed');
+gui.add(waterMat.uniforms.uSmallIterations, 'value')
+    .min(0)
+    .max(5)
+    .step(0.001)
+    .name('uSmallIterations');
 
 const water = new Mesh(waterGeo, waterMat);
 water.rotation.x = -Math.PI * 0.5;
@@ -113,18 +166,16 @@ scene.add(water);
 document.body.appendChild(renderer.domElement);
 
 const timer = new Timer();
-const clock = new Clock();
 let previousTime = 0;
 
 // NOTE: just started 'Using a Library' section of video at end of lunch
 function animate() {
     timer.update();
     const elapsedTime = timer.getElapsed();
-    const deltaTime = elapsedTime - previousTime;
     previousTime = elapsedTime;
 
     waterMat.uniforms.uTime.value = elapsedTime;
-    
+
     controls.update();
 
     renderer.render(scene, camera);

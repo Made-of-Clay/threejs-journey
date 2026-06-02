@@ -1,13 +1,23 @@
-import { MeshBasicMaterial, Mesh, AmbientLight, PerspectiveCamera, Scene, WebGLRenderer, Clock, PointLight, BoxGeometry, LoadingManager, AxesHelper, TextureLoader, MeshMatcapMaterial, SRGBColorSpace, TorusGeometry } from 'three'
+import {
+    Mesh,
+    AmbientLight,
+    PerspectiveCamera,
+    Scene,
+    WebGLRenderer,
+    PointLight,
+    LoadingManager,
+    AxesHelper,
+    TextureLoader,
+    MeshMatcapMaterial,
+    SRGBColorSpace,
+    TorusGeometry,
+} from 'three';
 import './style.css';
-import GUI from 'lil-gui';
 import { FontLoader, OrbitControls, TextGeometry } from 'three/examples/jsm/Addons.js';
 
 const scene = new Scene();
 
 // DEBUG
-const gui = new GUI();
-const debugObject: Record<string, any> = {};
 
 // CAMERA
 const camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -23,7 +33,7 @@ controls.dampingFactor = 0.1;
 controls.enableDamping = true;
 
 // LIGHT
-const color = 0xFFFFFF;
+const color = 0xffffff;
 const intensity = 1;
 const light = new AmbientLight(color, intensity);
 
@@ -70,10 +80,7 @@ fontLoader.load('/fonts/helvetiker_regular.typeface.json', (font) => {
     // const torusMaterial = new MeshMatcapMaterial({ matcap: matcapTexture });
 
     for (let i = 0; i < 100; i++) {
-        const donut = new Mesh(
-            torusGeometry,
-            sharedMatcap,
-        );
+        const donut = new Mesh(torusGeometry, sharedMatcap);
         donut.position.x = (Math.random() - 0.5) * 10;
         donut.position.y = (Math.random() - 0.5) * 10;
         donut.position.z = (Math.random() - 0.5) * 10;
@@ -95,11 +102,8 @@ scene.add(axisHelper);
 // RENDER
 document.body.appendChild(renderer.domElement);
 
-const clock = new Clock();
 // NOTE: just started 'Using a Library' section of video at end of lunch
 function animate() {
-    const elapsedTime = clock.getElapsedTime();
-
     controls.update();
 
     renderer.render(scene, camera);

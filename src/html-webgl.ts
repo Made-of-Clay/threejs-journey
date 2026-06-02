@@ -1,16 +1,33 @@
-import { PerspectiveCamera, Scene, WebGLRenderer, GridHelper, DirectionalLight, Mesh, MeshStandardMaterial, AxesHelper, TextureLoader, CubeTextureLoader, PCFShadowMap, ReinhardToneMapping, WebGLRenderTarget, PlaneGeometry, MeshBasicMaterial, ShaderMaterial, LoadingManager, Vector3, Raycaster, Vector2 } from 'three';
+import {
+    PerspectiveCamera,
+    Scene,
+    WebGLRenderer,
+    GridHelper,
+    DirectionalLight,
+    Mesh,
+    MeshStandardMaterial,
+    AxesHelper,
+    CubeTextureLoader,
+    PCFShadowMap,
+    ReinhardToneMapping,
+    PlaneGeometry,
+    ShaderMaterial,
+    LoadingManager,
+    Vector3,
+    Raycaster,
+    Vector2,
+} from 'three';
 
 import './style.css';
 import GUI from 'lil-gui';
 import { GLTFLoader, Timer } from 'three/examples/jsm/Addons.js';
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
-import {gsap} from 'gsap';
+import { gsap } from 'gsap';
 
 const scene = new Scene();
 
 // DEBUG
 const gui = new GUI();
-const params: Record<string, any> = {};
 
 // RENDERER
 const renderer = new WebGLRenderer({ alpha: true, antialias: true });
@@ -34,7 +51,7 @@ const loadingManager = new LoadingManager(
             loadingEl?.removeAttribute('style');
             loadingEl?.classList.add('finished');
         }, 500);
-        setTimeout(() => isSceneReady = true, 1000);
+        setTimeout(() => (isSceneReady = true), 1000);
     },
     (_url, loaded, total) => {
         const progress = loaded / total;
@@ -51,7 +68,7 @@ const points = [
     {
         position: new Vector3(1.55, 0.3, -0.6),
         element: document.querySelector<HTMLDivElement>('[data-point="0"]'),
-    }
+    },
 ];
 
 // CAMERA
@@ -75,7 +92,7 @@ scene.add(dirLight);
  */
 function updateAllMaterials() {
     scene.traverse((child) => {
-        if(child instanceof Mesh && child.material instanceof MeshStandardMaterial) {
+        if (child instanceof Mesh && child.material instanceof MeshStandardMaterial) {
             child.material.envMapIntensity = 2.5;
             child.material.needsUpdate = true;
             child.castShadow = true;
@@ -94,7 +111,7 @@ const environmentMap = cubeTextureLoader.load([
     '/textures/environmentMaps/0/ny.jpg',
     '/textures/environmentMaps/0/pz.jpg',
     '/textures/environmentMaps/0/nz.jpg',
-])
+]);
 
 scene.background = environmentMap;
 scene.environment = environmentMap;
@@ -102,17 +119,13 @@ scene.environment = environmentMap;
 /**
  * Models
  */
-gltfLoader.load(
-    '/models/DamagedHelmet/glTF/DamagedHelmet.gltf',
-    (gltf) =>
-    {
-        gltf.scene.scale.set(2, 2, 2);
-        gltf.scene.rotation.y = Math.PI * 0.5;
-        scene.add(gltf.scene);
+gltfLoader.load('/models/DamagedHelmet/glTF/DamagedHelmet.gltf', (gltf) => {
+    gltf.scene.scale.set(2, 2, 2);
+    gltf.scene.rotation.y = Math.PI * 0.5;
+    scene.add(gltf.scene);
 
-        updateAllMaterials();
-    }
-);
+    updateAllMaterials();
+});
 
 /**
  * Lights
@@ -122,7 +135,7 @@ directionalLight.castShadow = true;
 directionalLight.shadow.mapSize.set(1024, 1024);
 directionalLight.shadow.camera.far = 15;
 directionalLight.shadow.normalBias = 0.05;
-directionalLight.position.set(0.25, 3, - 2.25);
+directionalLight.position.set(0.25, 3, -2.25);
 scene.add(directionalLight);
 
 const sizes = {
@@ -173,7 +186,7 @@ const overlayMat = new ShaderMaterial({
         gl_FragColor = vec4(0.0, 0.0, 0.0, uAlpha);
     }
     `,
-})
+});
 const overlay = new Mesh(overlayGeo, overlayMat);
 scene.add(overlay);
 
@@ -197,14 +210,14 @@ function animate() {
         for (const point of points) {
             const screenPos = point.position.clone();
             screenPos.project(camera);
-    
+
             raycaster.setFromCamera(screenPos as unknown as Vector2, camera);
             const intersects = raycaster.intersectObjects(scene.children, true);
             if (!intersects.length) {
                 point.element?.classList.add('showing');
             } else {
                 const intersectionDistance = intersects[0].distance;
-                camera.position.distanceTo
+                camera.position.distanceTo;
                 const pointDistance = point.position.distanceTo(camera.position);
                 if (intersectionDistance < pointDistance) {
                     point.element?.classList.remove('showing');
@@ -213,7 +226,7 @@ function animate() {
                 }
                 // point.element?.classList.remove('showing');
             }
-            
+
             const translateX = screenPos.x * innerWidth * 0.5;
             const translateY = screenPos.y * innerHeight * 0.5;
             point.element?.style.setProperty('--translateX', `${translateX}px`);

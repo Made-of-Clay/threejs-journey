@@ -1,4 +1,17 @@
-import { PerspectiveCamera, Scene, WebGLRenderer, DirectionalLight, PCFShadowMap, ReinhardToneMapping, Mesh, TorusKnotGeometry, MeshStandardMaterial, BufferGeometry, SphereGeometry, PlaneGeometry, BoxGeometry } from 'three';
+import {
+    PerspectiveCamera,
+    Scene,
+    WebGLRenderer,
+    DirectionalLight,
+    PCFShadowMap,
+    ReinhardToneMapping,
+    Mesh,
+    TorusKnotGeometry,
+    MeshStandardMaterial,
+    SphereGeometry,
+    PlaneGeometry,
+    BoxGeometry,
+} from 'three';
 
 import './style.css';
 import GUI from 'lil-gui';
@@ -13,8 +26,6 @@ stats.showPanel(0);
 document.body.appendChild(stats.dom);
 
 // DEBUG
-const gui = new GUI();
-const params: Record<string, any> = {};
 
 // RENDERER
 const renderer = new WebGLRenderer({ alpha: true, antialias: true });
@@ -43,38 +54,26 @@ dirLight.castShadow = true;
 scene.add(dirLight);
 
 // OBJECTS
-const torusKnot = new Mesh(
-    new TorusKnotGeometry(1, 0.4, 128, 32),
-    new MeshStandardMaterial(),
-);
+const torusKnot = new Mesh(new TorusKnotGeometry(1, 0.4, 128, 32), new MeshStandardMaterial());
 torusKnot.castShadow = true;
 torusKnot.receiveShadow = false;
 scene.add(torusKnot);
 
-const sphere = new Mesh(
-    new SphereGeometry(1, 32, 32),
-    new MeshStandardMaterial(),
-);
+const sphere = new Mesh(new SphereGeometry(1, 32, 32), new MeshStandardMaterial());
 sphere.position.set(5, 0, 0);
 sphere.castShadow = true;
 sphere.receiveShadow = false;
 scene.add(sphere);
 
-const cube = new Mesh(
-    new BoxGeometry(1, 1, 1),
-    new MeshStandardMaterial(),
-);
+const cube = new Mesh(new BoxGeometry(1, 1, 1), new MeshStandardMaterial());
 cube.position.set(-5, 0, 0);
 cube.castShadow = true;
 cube.receiveShadow = false;
 scene.add(cube);
 
-const floor = new Mesh(
-    new PlaneGeometry(10, 10),
-    new MeshStandardMaterial({ color: 'white' }),
-);
+const floor = new Mesh(new PlaneGeometry(10, 10), new MeshStandardMaterial({ color: 'white' }));
 floor.position.set(0, -2, 0);
-floor.rotation.x = - Math.PI * 0.5;
+floor.rotation.x = -Math.PI * 0.5;
 floor.castShadow = true;
 floor.receiveShadow = true;
 scene.add(floor);
@@ -109,7 +108,6 @@ function animate() {
     stats.begin();
     timer.update();
     const elapsedTime = timer.getElapsed();
-    const deltaTime = elapsedTime - previousTime;
     previousTime = elapsedTime;
 
     torusKnot.rotation.y = elapsedTime * 0.1;

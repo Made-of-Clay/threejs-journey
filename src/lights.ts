@@ -1,13 +1,29 @@
-import { MeshBasicMaterial, Mesh, AmbientLight, PerspectiveCamera, Scene, WebGLRenderer, Clock, PointLight, BoxGeometry, LoadingManager, AxesHelper, TextureLoader, MeshMatcapMaterial, SRGBColorSpace, TorusGeometry, SphereGeometry, MeshStandardMaterial, PlaneGeometry, DirectionalLight, HemisphereLight, RectAreaLight } from 'three'
+import {
+    Mesh,
+    AmbientLight,
+    PerspectiveCamera,
+    Scene,
+    WebGLRenderer,
+    Clock,
+    PointLight,
+    BoxGeometry,
+    AxesHelper,
+    TorusGeometry,
+    SphereGeometry,
+    MeshStandardMaterial,
+    PlaneGeometry,
+    DirectionalLight,
+    HemisphereLight,
+    RectAreaLight,
+} from 'three';
 import './style.css';
 import GUI from 'lil-gui';
-import { FontLoader, OrbitControls, TextGeometry } from 'three/examples/jsm/Addons.js';
+import { OrbitControls } from 'three/examples/jsm/Addons.js';
 
 const scene = new Scene();
 
 // DEBUG
 const gui = new GUI();
-const debugObject: Record<string, any> = {};
 
 // CAMERA
 const camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -46,28 +62,16 @@ gui.add(pointLight.position, 'x').min(-5).max(5).step(1).name('Point X');
 const material = new MeshStandardMaterial();
 material.roughness = 0.4;
 
-const sphere = new Mesh(
-    new SphereGeometry(0.5, 32, 32),
-    material,
-);
+const sphere = new Mesh(new SphereGeometry(0.5, 32, 32), material);
 
 sphere.position.x = -1.5;
-const cube = new Mesh(
-    new BoxGeometry(0.75, 0.75, 0.75),
-    material,
-);
+const cube = new Mesh(new BoxGeometry(0.75, 0.75, 0.75), material);
 
-const torus = new Mesh(
-    new TorusGeometry(0.3, 0.2, 32, 64),
-    material,
-);
+const torus = new Mesh(new TorusGeometry(0.3, 0.2, 32, 64), material);
 torus.position.x = 1.5;
 
-const plane = new Mesh(
-    new PlaneGeometry(10, 10),
-    material,
-);
-plane.rotateX(-(Math.PI) * 0.5);
+const plane = new Mesh(new PlaneGeometry(10, 10), material);
+plane.rotateX(-Math.PI * 0.5);
 plane.position.y = -0.75;
 
 scene.add(sphere, cube, torus, plane);

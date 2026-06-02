@@ -1,4 +1,17 @@
-import { AmbientLight, PerspectiveCamera, Scene, WebGLRenderer, TextureLoader, LoadingManager, SphereGeometry, PointsMaterial, Points, BufferGeometry, BufferAttribute, GridHelper, BoxGeometry, MeshBasicMaterial, Mesh, AdditiveBlending } from 'three';
+import {
+    AmbientLight,
+    PerspectiveCamera,
+    Scene,
+    WebGLRenderer,
+    TextureLoader,
+    LoadingManager,
+    PointsMaterial,
+    Points,
+    BufferGeometry,
+    BufferAttribute,
+    GridHelper,
+    AdditiveBlending,
+} from 'three';
 
 import './style.css';
 import GUI from 'lil-gui';
@@ -7,8 +20,6 @@ import { OrbitControls, Timer } from 'three/examples/jsm/Addons.js';
 const scene = new Scene();
 
 // DEBUG
-const gui = new GUI();
-const debugObject: Record<string, any> = {};
 
 // RENDERER
 const renderer = new WebGLRenderer();
@@ -56,7 +67,8 @@ for (let i = 0; i < count * 3; i++) {
 particleGeo.setAttribute('position', new BufferAttribute(positions, 3));
 particleGeo.setAttribute('color', new BufferAttribute(colors, 3));
 
-const particleMat = new PointsMaterial({ // dots along vertices?
+const particleMat = new PointsMaterial({
+    // dots along vertices?
     size: 0.1,
     sizeAttenuation: true,
 
@@ -98,8 +110,8 @@ function animate() {
     // * This is not great for performance. It must update *many* vertices each animation frame. Custom shaders are better.
     for (let i = 0; i < count; i++) {
         const i3 = i * 3;
-        const x = particleGeo.attributes.position.array[i3]
-        particleGeo.attributes.position.array[i3 + 1] = Math.sin(elapsedTime + x)
+        const x = particleGeo.attributes.position.array[i3];
+        particleGeo.attributes.position.array[i3 + 1] = Math.sin(elapsedTime + x);
     }
     particleGeo.attributes.position.needsUpdate = true;
 

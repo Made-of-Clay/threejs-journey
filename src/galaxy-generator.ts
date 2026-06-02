@@ -1,4 +1,18 @@
-import { AmbientLight, PerspectiveCamera, Scene, WebGLRenderer, TextureLoader, LoadingManager, SphereGeometry, PointsMaterial, Points, BufferGeometry, BufferAttribute, GridHelper, BoxGeometry, MeshBasicMaterial, Mesh, AdditiveBlending, Color } from 'three';
+import {
+    AmbientLight,
+    PerspectiveCamera,
+    Scene,
+    WebGLRenderer,
+    TextureLoader,
+    LoadingManager,
+    PointsMaterial,
+    Points,
+    BufferGeometry,
+    BufferAttribute,
+    GridHelper,
+    AdditiveBlending,
+    Color,
+} from 'three';
 
 import './style.css';
 import GUI from 'lil-gui';
@@ -38,7 +52,6 @@ gui.add(gridHelper, 'visible').name('Show Grid Helper');
 
 // TEXTURES
 const loadingManager = new LoadingManager(console.log, undefined, console.error);
-const textureLoader = new TextureLoader(loadingManager);
 
 // Galaxy
 params.count = 100000;
@@ -81,12 +94,15 @@ function generateGalaxy() {
     for (let i = 0; i < params.count; i++) {
         const i3 = i * 3;
         const radius = Math.random() * params.radius;
-        const branchAngle = (i % params.branches) / params.branches * (Math.PI * 2);
+        const branchAngle = ((i % params.branches) / params.branches) * (Math.PI * 2);
         const spinAngle = radius * params.spin;
 
-        const randomX = Math.pow(Math.random(), params.randomnessPower) * (Math.random() < 0.5 ? 1 : -1);
-        const randomY = Math.pow(Math.random(), params.randomnessPower) * (Math.random() < 0.5 ? 1 : -1);
-        const randomZ = Math.pow(Math.random(), params.randomnessPower) * (Math.random() < 0.5 ? 1 : -1);
+        const randomX =
+            Math.pow(Math.random(), params.randomnessPower) * (Math.random() < 0.5 ? 1 : -1);
+        const randomY =
+            Math.pow(Math.random(), params.randomnessPower) * (Math.random() < 0.5 ? 1 : -1);
+        const randomZ =
+            Math.pow(Math.random(), params.randomnessPower) * (Math.random() < 0.5 ? 1 : -1);
 
         if (i < 20) {
             console.log(i, branchAngle);
@@ -98,20 +114,14 @@ function generateGalaxy() {
 
         const mixedColor = colorInside.clone();
         mixedColor.lerp(colorOutside, radius / params.radius);
-        
+
         colors[i3 + 0] = mixedColor.r;
         colors[i3 + 1] = mixedColor.g;
         colors[i3 + 2] = mixedColor.b;
     }
-    geometry.setAttribute(
-        'position',
-        new BufferAttribute(positions, 3),
-    );
+    geometry.setAttribute('position', new BufferAttribute(positions, 3));
 
-    geometry.setAttribute(
-        'color',
-        new BufferAttribute(colors, 3),
-    );
+    geometry.setAttribute('color', new BufferAttribute(colors, 3));
 
     material = new PointsMaterial({
         size: params.size,
@@ -133,7 +143,6 @@ const timer = new Timer();
 // NOTE: just started 'Using a Library' section of video at end of lunch
 function animate() {
     timer.update();
-    const elapsedTime = timer.getElapsed();
 
     controls.update();
 

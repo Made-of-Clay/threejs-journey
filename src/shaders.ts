@@ -1,8 +1,23 @@
-import { PerspectiveCamera, Scene, WebGLRenderer, GridHelper, DirectionalLight, Clock, Mesh, PlaneGeometry, MeshStandardMaterial, AxesHelper, RawShaderMaterial, BufferAttribute, BufferGeometry, Vector2, Color, TextureLoader, LoadingManager, ShaderMaterial } from 'three';
+import {
+    PerspectiveCamera,
+    Scene,
+    WebGLRenderer,
+    GridHelper,
+    DirectionalLight,
+    Mesh,
+    PlaneGeometry,
+    AxesHelper,
+    BufferAttribute,
+    Vector2,
+    Color,
+    TextureLoader,
+    LoadingManager,
+    ShaderMaterial,
+} from 'three';
 
 import './style.css';
 import GUI from 'lil-gui';
-import { Timer } from 'three/examples/jsm/Addons.js';
+import { Timer } from 'three';
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
 import testVertexShader from './shaders/test/vertex.glsl?raw';
 import testFragmentShader from './shaders/test/fragment.glsl?raw';
@@ -24,7 +39,6 @@ const flagTexture = textureLoader.load('/textures/flag-french.jpg');
 
 // DEBUG
 const gui = new GUI();
-const params: Record<string, any> = {};
 
 // RENDERER
 const renderer = new WebGLRenderer({ alpha: true, antialias: true });
@@ -117,7 +131,7 @@ const material = new ShaderMaterial({
     uniforms: {
         uFrequency: { value: new Vector2(10, 5) },
         uTime: { value: 0 },
-        uColor: { value: new Color('#ff9800')},
+        uColor: { value: new Color('#ff9800') },
         uTexture: { value: flagTexture },
     },
 });
@@ -136,15 +150,10 @@ scene.add(plane);
 document.body.appendChild(renderer.domElement);
 
 const timer = new Timer();
-const clock = new Clock();
-let previousTime = 0;
 
-// NOTE: just started 'Using a Library' section of video at end of lunch
 function animate() {
     timer.update();
     const elapsedTime = timer.getElapsed();
-    const deltaTime = elapsedTime - previousTime;
-    previousTime = elapsedTime;
 
     material.uniforms.uTime.value = elapsedTime;
 

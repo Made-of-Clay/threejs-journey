@@ -1,5 +1,15 @@
 import './style.css';
-import { AmbientLight, AxesHelper, BoxGeometry, Group, Mesh, MeshBasicMaterial, PerspectiveCamera, Scene, WebGLRenderer } from 'three';
+import {
+    AmbientLight,
+    AxesHelper,
+    BoxGeometry,
+    Group,
+    Mesh,
+    MeshBasicMaterial,
+    PerspectiveCamera,
+    Scene,
+    WebGLRenderer,
+} from 'three';
 
 const scene = new Scene();
 const camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -15,14 +25,11 @@ scene.add(axesHelper);
 const geometry = new BoxGeometry(1, 1, 1);
 const material = new MeshBasicMaterial({ color: 0xaa00bb });
 const cube = new Mesh(geometry, material);
-cube.position.y = 3
+cube.position.y = 3;
 // cube.rotation.
 // scene.add(cube);
 
-const cube2 = new Mesh(
-    new BoxGeometry(1, 1, 1),
-    new MeshBasicMaterial({ color: 0xaa0000 })
-);
+const cube2 = new Mesh(new BoxGeometry(1, 1, 1), new MeshBasicMaterial({ color: 0xaa0000 }));
 // scene.add(cube2);
 
 const group = new Group();
@@ -33,7 +40,7 @@ scene.add(group);
 
 camera.lookAt(group.position);
 
-const color = 0xFFFFFF;
+const color = 0xffffff;
 const intensity = 1;
 const light = new AmbientLight(color, intensity);
 scene.add(light);

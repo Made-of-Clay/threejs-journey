@@ -1,27 +1,32 @@
 {
   "name": "threejs-journey",
-  "private": true,
   "version": "0.0.0",
+  "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
+    "fmt:check": "oxfmt --check",
     "convert": "node convert-image.js"
-  },
-  "devDependencies": {
-    "@types/cannon": "^0.1.13",
-    "@types/three": "^0.176.0",
-    "prettier": "3.5.3",
-    "sharp": "^0.34.2",
-    "typescript": "~5.8.3",
-    "vite": "^6.3.5"
   },
   "dependencies": {
     "cannon-es": "^0.20.0",
-    "gsap": "^3.13.0",
-    "lil-gui": "^0.20.0",
+    "gsap": "^3.15.0",
+    "lil-gui": "^0.21.0",
     "stats.js": "^0.17.0",
-    "three": "^0.176.0"
+    "three": "^0.184.0"
+  },
+  "devDependencies": {
+    "@types/cannon": "^0.1.13",
+    "@types/three": "^0.184.1",
+    "oxfmt": "^0.52.0",
+    "oxlint": "^1.67.0",
+    "oxlint-tsgolint": "^0.23.0",
+    "sharp": "^0.34.5",
+    "typescript": "~6.0.3",
+    "vite": "^8.0.14"
   }
 }

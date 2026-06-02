@@ -1,16 +1,30 @@
-import { PerspectiveCamera, Scene, WebGLRenderer, GridHelper, DirectionalLight, Mesh, MeshStandardMaterial, AxesHelper, TextureLoader, CubeTextureLoader, PCFShadowMap, ReinhardToneMapping, WebGLRenderTarget, PlaneGeometry, MeshBasicMaterial, ShaderMaterial, LoadingManager } from 'three';
+import {
+    PerspectiveCamera,
+    Scene,
+    WebGLRenderer,
+    GridHelper,
+    DirectionalLight,
+    Mesh,
+    MeshStandardMaterial,
+    AxesHelper,
+    CubeTextureLoader,
+    PCFShadowMap,
+    ReinhardToneMapping,
+    PlaneGeometry,
+    ShaderMaterial,
+    LoadingManager,
+} from 'three';
 
 import './style.css';
 import GUI from 'lil-gui';
 import { GLTFLoader, Timer } from 'three/examples/jsm/Addons.js';
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
-import {gsap} from 'gsap';
+import { gsap } from 'gsap';
 
 const scene = new Scene();
 
 // DEBUG
 const gui = new GUI();
-const params: Record<string, any> = {};
 
 // RENDERER
 const renderer = new WebGLRenderer({ alpha: true, antialias: true });
@@ -64,7 +78,7 @@ scene.add(dirLight);
  */
 function updateAllMaterials() {
     scene.traverse((child) => {
-        if(child instanceof Mesh && child.material instanceof MeshStandardMaterial) {
+        if (child instanceof Mesh && child.material instanceof MeshStandardMaterial) {
             child.material.envMapIntensity = 2.5;
             child.material.needsUpdate = true;
             child.castShadow = true;
@@ -83,7 +97,7 @@ const environmentMap = cubeTextureLoader.load([
     '/textures/environmentMaps/0/ny.jpg',
     '/textures/environmentMaps/0/pz.jpg',
     '/textures/environmentMaps/0/nz.jpg',
-])
+]);
 
 scene.background = environmentMap;
 scene.environment = environmentMap;
@@ -91,17 +105,13 @@ scene.environment = environmentMap;
 /**
  * Models
  */
-gltfLoader.load(
-    '/models/DamagedHelmet/glTF/DamagedHelmet.gltf',
-    (gltf) =>
-    {
-        gltf.scene.scale.set(2, 2, 2);
-        gltf.scene.rotation.y = Math.PI * 0.5;
-        scene.add(gltf.scene);
+gltfLoader.load('/models/DamagedHelmet/glTF/DamagedHelmet.gltf', (gltf) => {
+    gltf.scene.scale.set(2, 2, 2);
+    gltf.scene.rotation.y = Math.PI * 0.5;
+    scene.add(gltf.scene);
 
-        updateAllMaterials();
-    }
-);
+    updateAllMaterials();
+});
 
 /**
  * Lights
@@ -111,7 +121,7 @@ directionalLight.castShadow = true;
 directionalLight.shadow.mapSize.set(1024, 1024);
 directionalLight.shadow.camera.far = 15;
 directionalLight.shadow.normalBias = 0.05;
-directionalLight.position.set(0.25, 3, - 2.25);
+directionalLight.position.set(0.25, 3, -2.25);
 scene.add(directionalLight);
 
 const sizes = {
@@ -162,7 +172,7 @@ const overlayMat = new ShaderMaterial({
         gl_FragColor = vec4(0.0, 0.0, 0.0, uAlpha);
     }
     `,
-})
+});
 const overlay = new Mesh(overlayGeo, overlayMat);
 scene.add(overlay);
 
